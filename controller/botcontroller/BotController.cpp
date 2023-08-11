@@ -1,6 +1,6 @@
 #include "BotController.h"
 #include "constants.h"
-//#include "MacroCommands.h"
+
 
 namespace ctrl
 {
@@ -11,7 +11,7 @@ namespace ctrl
 	{
 	}
 
-	BotController* BotController::getInstanse(const std::string &TOKEN)
+	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept
 	{
 		if (!singleton) {
 			singleton = new BotController(TOKEN);
@@ -21,32 +21,33 @@ namespace ctrl
 
 	void BotController::initCommands(const std::vector<cmd::Command*>& cmds)
 	{
-		for (auto &cmd: cmds) {
+		for (const auto &cmd: cmds) {
 			const auto type = cmd->type();
+			std::shared_ptr<cmd::Command> clone(cmd->clone());
 
 			if (type == cmd::type::MACRO) {
-				bot.getEvents().onCommand(cmd->name(), [&, cmd](TgBot::Message::Ptr message) {          /// copy the command from command base and set needed argument!
-					cmd->setMessage(message);
-					cmd->execute(bot);
+				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr message) {          /// use clone from command base and set needed argument!
+					clone->setMessage(message);
+					clone->execute(bot);
 				});
 			}
 			else if (type == cmd::type::INLINE) {
-				bot.getEvents().onCallbackQuery([&, cmd](TgBot::CallbackQuery::Ptr query) {
-					cmd->setCallbackQuery(query);
-					cmd->execute(bot);
+				bot.getEvents().onCallbackQuery([&, clone](TgBot::CallbackQuery::Ptr query) {
+					clone->setCallbackQuery(query);
+					clone->execute(bot);
 				});
 			}
 			else if (type == cmd::type::ANY) {
-				bot.getEvents().onAnyMessage([&, cmd](TgBot::Message::Ptr message) {
-					cmd->setMessage(message);
-					cmd->execute(bot);
+				bot.getEvents().onAnyMessage([&, clone](TgBot::Message::Ptr message) {
+					clone->setMessage(message);
+					clone->execute(bot);
 				});
 			}
 		}
 		std::cout << "Bot initialized!" << std::endl;
 	}
 
-	void BotController::listen()
+	void BotController::listen() noexcept
 	{
 		std::cout << "Listening...\n" << std::endl;
 

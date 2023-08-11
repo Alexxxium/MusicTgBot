@@ -31,6 +31,8 @@ set(SOURCES
     model/commands/source/InlineCommands.cpp 
     model/commands/source/MacroCommands.cpp 
     model/commands/source/Command.cpp 
+    model/keyboards/InlKeyboardFactory.cpp 
+    core/source/HTML.cpp
 )
 
 
@@ -41,6 +43,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     controller/botcontroller
     controller/constants
     model/commands/include
+    model/keyboards 
+    core/include
+
 )
 
 target_link_libraries(MusicBot ${TgBot} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})

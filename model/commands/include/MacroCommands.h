@@ -6,11 +6,12 @@ namespace cmd::mcr
 	class Start: public MacroCommand
 	{
 	public:
-		Start () = delete;                                                                                                           ///
-		~Start() = default;                                                                                                          /// DEFAULT HEAD
-		Start (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}  ///
+		Start () = delete;                                                                                                                     ///
+		~Start() = default;                                                                                                                    /// DEFAULT HEAD
+		explicit Start (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}   ///
+		Command* clone() const noexcept override { return new Start(*this); }                                                                  ///
 
-		bool execute(TgBot::Bot &bot) const override;                                                                                /// EXECUTE METHOD 
+		bool execute(TgBot::Bot &bot) const override;                                                                                          /// EXECUTE METHOD 
 	};
 
 	class Info: public MacroCommand
@@ -18,7 +19,8 @@ namespace cmd::mcr
 	public:
 		Info () = delete;
 		~Info() = default;
-		Info (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		explicit Info (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		Command* clone() const noexcept override { return new Info(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
@@ -29,6 +31,7 @@ namespace cmd::mcr
 		ShowPlayList () = delete;
 		~ShowPlayList() = default;
 		ShowPlayList (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		Command* clone() const noexcept override { return new ShowPlayList(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
@@ -38,7 +41,8 @@ namespace cmd::mcr
 	public:
 		CreatePlayList () = delete;
 		~CreatePlayList() = default;
-		CreatePlayList (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		explicit CreatePlayList (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		Command* clone() const noexcept override { return new CreatePlayList(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

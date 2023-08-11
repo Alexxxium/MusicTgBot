@@ -13,8 +13,11 @@ namespace cmd
 	public:
 		virtual ~Command() = default;
 
-		virtual std::string type            () const                                 = 0;
-		virtual std::string name            () const                                 = 0;
+		
+		virtual void        log             () const noexcept                        = 0;
+		virtual std::string type            () const noexcept                        = 0;
+		virtual std::string name            () const noexcept                        = 0;
+		virtual Command*    clone           () const noexcept                        = 0;
 		virtual bool        execute         (TgBot::Bot &bot) const                  = 0;
 		virtual void        setMessage      (const TgBot::Message::Ptr &message)     = 0;
 		virtual void        setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) = 0;
@@ -35,9 +38,11 @@ namespace cmd
 		MacroCommand& operator=(const MacroCommand&) = default;
 
 
-		virtual std::string type() const final;
-		virtual std::string name() const final;
-		virtual bool        execute(TgBot::Bot &bot) const;                                  /// <- BAN
+		virtual void        log ()  const noexcept final;
+		virtual std::string type()  const noexcept final;
+		virtual std::string name()  const noexcept final;
+		virtual Command*    clone() const noexcept override;
+		virtual bool        execute(TgBot::Bot &bot) const override;                         /// <- BAN
 
 
 		virtual void setMessage      (const TgBot::Message::Ptr &message)     final;
@@ -63,9 +68,11 @@ namespace cmd
 		InlineCommand& operator=(const InlineCommand&) = default;
 
 
-		virtual std::string type() const final;
-		virtual std::string name() const final;
-		virtual bool        execute(TgBot::Bot &bot) const;                                  /// <- BAN
+		virtual void        log ()  const noexcept final;
+		virtual std::string type()  const noexcept final;
+		virtual std::string name()  const noexcept final;
+		virtual Command*    clone() const noexcept override;
+		virtual bool        execute(TgBot::Bot &bot) const override;                         /// <- BAN
 
 
 		virtual void setMessage      (const TgBot::Message::Ptr &message)     final;         /// <- BAN 
@@ -91,13 +98,15 @@ namespace cmd
 		AnyCommand& operator=(const AnyCommand&) = default;
 
 
-		virtual std::string type() const final;
-		virtual std::string name() const final;
-		virtual bool        execute(TgBot::Bot &bot) const;                                         /// <- BAN
+		virtual void        log ()  const noexcept final;
+		virtual std::string type()  const noexcept final;
+		virtual std::string name()  const noexcept final;
+		virtual Command*    clone() const noexcept override;
+		virtual bool        execute(TgBot::Bot &bot) const override;                                /// <- BAN
 
 
-		virtual void        setMessage(const TgBot::Message::Ptr &message)           final; 
-		virtual void        setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) final;         /// <- BAN
+		virtual void setMessage(const TgBot::Message::Ptr &message)           final; 
+		virtual void setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) final;                /// <- BAN
 
 
 		virtual ~AnyCommand() = default;

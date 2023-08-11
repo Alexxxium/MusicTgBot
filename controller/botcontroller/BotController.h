@@ -23,9 +23,9 @@ namespace ctrl
 		BotController& operator=(BotController&&) = delete;
 		BotController& operator=(const BotController) = delete;
 
-		static BotController* getInstanse(const std::string &TOKEN);
+		static BotController* getInstanse(const std::string &TOKEN) noexcept;
 
 		void initCommands(const std::vector<cmd::Command*> &cmds);
-		void listen();
+		void listen() noexcept;
 	};
 }

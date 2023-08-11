@@ -3,29 +3,55 @@
 
 namespace cmd
 {
-	std::string Command::type() const {
+	void AnyCommand::log() const noexcept {
+		Command::log();
+	}
+	void MacroCommand::log() const noexcept {
+		Command::log();
+	}
+	void InlineCommand::log() const noexcept {
+		Command::log();
+	}
+
+	Command* AnyCommand::clone() const noexcept {
+		return new AnyCommand(*this);
+	}
+	Command* MacroCommand::clone() const noexcept {
+		return new MacroCommand(*this);
+	}
+	Command* InlineCommand::clone() const noexcept {
+		return new InlineCommand(*this);
+	}
+
+	inline void Command::log() const noexcept {
+		std::cout <<
+			"-l command log:" << '\n' <<
+			"type:  \t" << type() << '\n' <<
+			"name:  \t" << name() << '\n' << std::endl;
+	}
+	inline std::string Command::type() const noexcept {
 		return _type;
 	}
-	std::string Command::name() const {
+	inline std::string Command::name() const noexcept {
 		return _name;
 	}
 	
-	std::string AnyCommand::type() const {
+	std::string AnyCommand::type() const noexcept {
 		return Command::type();
 	}
-	std::string AnyCommand::name() const {
+	std::string AnyCommand::name() const noexcept {
 		return Command::name();
 	}
-	std::string MacroCommand::type() const {
+	std::string MacroCommand::type() const noexcept {
 		return Command::type();
 	}
-	std::string MacroCommand::name() const {
+	std::string MacroCommand::name() const noexcept {
 		return Command::name();
 	}
-	std::string InlineCommand::type() const {
+	std::string InlineCommand::type() const noexcept {
 		return Command::type();
 	}
-	std::string InlineCommand::name() const {
+	std::string InlineCommand::name() const noexcept {
 		return Command::name();
 	}
 
