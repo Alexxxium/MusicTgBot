@@ -38,7 +38,9 @@ namespace init
 		new mcr::Start("start"),
 		new mcr::Info("info"),
 		new mcr::ShowPlayList("playlists"),
-        new inl::PlayLists("nahyi name")
+        new inl::PlayLists("1"),
+        new inl::PlayLists("2"),
+        new inl::PlayLists("3")
 	};
 
 	TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard() {

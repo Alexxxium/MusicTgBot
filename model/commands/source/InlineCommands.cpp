@@ -3,7 +3,7 @@
 namespace cmd::inl
 {
 	bool PlayLists::execute(TgBot::Bot &bot) const {
-		std::cout << _query->data << ' ';
+		std::cout << "Inline execute:\t" << _query->data << '\n';
 		return true;
 	}
 }

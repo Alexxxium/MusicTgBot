@@ -1,5 +1,6 @@
 #include "BotController.h"
 #include "constants.h"
+#include <unordered_map>
 
 
 namespace ctrl
@@ -19,9 +20,12 @@ namespace ctrl
 		return singleton;
 	}
 
-	void BotController::initCommands(const std::vector<cmd::Command*>& cmds)
+	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
-		for (const auto &cmd: cmds) {
+		std::unordered_map<std::string, cmd::Command*> inl_cmds;
+
+		for (const auto &cmd: commands) {
+
 			const auto type = cmd->type();
 			std::shared_ptr<cmd::Command> clone(cmd->clone());
 
@@ -31,20 +35,25 @@ namespace ctrl
 					clone->execute(bot);
 				});
 			}
-			else if (type == cmd::type::INLINE) {
-				bot.getEvents().onCallbackQuery([&, clone](TgBot::CallbackQuery::Ptr query) {
-					clone->setCallbackQuery(query);
-					clone->execute(bot);
-				});
+			else if (type == cmd::type::INLINE) {                                                         /// remembering inl. command!
+				inl_cmds.insert({ clone->name(), cmd });
 			}
 			else if (type == cmd::type::ANY) {
-				bot.getEvents().onAnyMessage([&, clone](TgBot::Message::Ptr message) {
-					clone->setMessage(message);
-					clone->execute(bot);
-				});
+
 			}
 		}
-		std::cout << "Bot initialized!" << std::endl;
+
+		bot.getEvents().onCallbackQuery([&, inl_cmds](TgBot::CallbackQuery::Ptr query) {                  /// find neaded inl. command and execute!
+			const auto &inl = inl_cmds.find(query->data);
+			if (inl != inl_cmds.end()) {
+				std::unique_ptr<cmd::Command> wrap(inl->second->clone());
+				wrap->setCallbackQuery(query);
+				wrap->execute(bot);
+			}
+		});
+		bot.getEvents().onAnyMessage([](TgBot::Message::Ptr message) {
+
+		});
 	}
 
 	void BotController::listen() noexcept
