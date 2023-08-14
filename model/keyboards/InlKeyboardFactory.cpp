@@ -1,13 +1,9 @@
 #include "InlKeyboardFactory.h"
 
 
-namespace board
+namespace cmd
 {
-	InlKeyboardFactory::InlKeyboardFactory(int64_t id) :
-		user_id(id)
-	{
-	}
-	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::PlayLists() {
+	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::PlayLists(int64_t user_id) {
 		TgBot::InlineKeyboardMarkup::Ptr keyboard(new TgBot::InlineKeyboardMarkup);
 		TgBot::InlineKeyboardButton::Ptr button_x(new TgBot::InlineKeyboardButton);
 		TgBot::InlineKeyboardButton::Ptr button_y(new TgBot::InlineKeyboardButton);
@@ -22,11 +18,11 @@ namespace board
 
 		return keyboard;
 	}
-	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::TrackMenu(const std::string &track_name) {
+	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::TrackMenu(int64_t user_id, const std::string &track_name) {
 		/// create keyboard with concreate track in PlayList
 		return nullptr;
 	}
-	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::Tracks(const std::string &play_list_name) {
+	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::Tracks(int64_t user_id, const std::string &play_list_name) {
 		/// create keyboard with all tracks in PlayList
 		return nullptr;
 	}

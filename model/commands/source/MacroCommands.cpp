@@ -25,8 +25,7 @@ namespace cmd::mcr
 
 	bool ShowPlayList::execute(TgBot::Bot &bot) const {
 		log();
-		board::InlKeyboardFactory obj(_message->chat->id);
-		auto keyboard = obj.PlayLists();
+		auto keyboard = cmd::InlKeyboardFactory::PlayLists(_message->chat->id);
 		bot.getApi().sendMessage(_message->chat->id, "Playlist:", false, 0, keyboard, markup::HTML);
 
 		return true;
