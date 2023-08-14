@@ -15,9 +15,9 @@ namespace board
 		button_x->text = "Y";
 		button_y->text = "N";
 		button_z->text = "?";
-		button_x->callbackData = "1";
-		button_y->callbackData = "2";
-		button_z->callbackData = "3";
+		button_x->callbackData = "1 3";
+		button_y->callbackData = "2 2";
+		button_z->callbackData = "3 1";
 		keyboard->inlineKeyboard = { { button_x, button_y }, { button_z } };
 
 		return keyboard;

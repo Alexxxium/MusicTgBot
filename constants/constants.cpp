@@ -3,7 +3,7 @@
 #include "constants.h"
 
 
-const std::string TOKEN = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
+
 
 
 
@@ -12,7 +12,7 @@ namespace markup
 	const std::string MARKDOWN = "Murkdown", HTML = "HTML";
 }
 
-namespace cmd::type
+namespace cmd
 {
 	const std::string MACRO = "MACRO", INLINE = "INLINE", ANY = "ANY";
 }
@@ -33,14 +33,16 @@ namespace init
 {
 	using namespace cmd;
 
+	const std::string TOKEN = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
+
 	const std::vector<cmd::Command*> CMD_BASE
 	{
 		new mcr::Start("start"),
 		new mcr::Info("info"),
 		new mcr::ShowPlayList("playlists"),
-        new inl::PlayLists("1"),
-        new inl::PlayLists("2"),
-        new inl::PlayLists("3")
+        new inl::PlayLists("1 3"),
+        new inl::PlayLists("2 2"),
+        new inl::PlayLists("3 1")
 	};
 
 	TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard() {

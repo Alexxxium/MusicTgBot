@@ -5,16 +5,13 @@
 #include <vector>
 
 
-extern const std::string TOKEN;
-
-
 
 namespace markup 
 {
 	extern const std::string MARKDOWN, HTML;
 }
 
-namespace cmd::type
+namespace cmd
 {
 	extern const std::string MACRO, INLINE, ANY;
 }
@@ -31,6 +28,8 @@ namespace path
 
 namespace init
 {
+	extern const std::string TOKEN;
+
 	/// BASE OF ALL BOT`S COMMANDS
 	extern const std::vector<cmd::Command*> CMD_BASE;
 

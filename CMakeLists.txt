@@ -25,14 +25,15 @@ set(TgBot "D:/Libs/vcpkg/installed/x64-windows/lib/TgBot.lib")
 
 set(SOURCES
     main.cpp 
-    controller/botcontroller/BotController.cpp 
+    controller/BotController.cpp 
     constants/constants.cpp 
     model/commands/source/AnyCommands.cpp 
     model/commands/source/InlineCommands.cpp 
     model/commands/source/MacroCommands.cpp 
     model/commands/source/Command.cpp 
     model/keyboards/InlKeyboardFactory.cpp 
-    core/source/HTML.cpp
+    core/source/parsers.cpp
+    core/source/userdata.cpp
 )
 
 
@@ -40,7 +41,7 @@ add_executable(MusicBot ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     constants
-    controller/botcontroller
+    controller
     controller/constants
     model/commands/include
     model/keyboards 

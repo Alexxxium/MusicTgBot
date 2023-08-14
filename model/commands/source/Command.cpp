@@ -68,17 +68,17 @@ namespace cmd
 
 	AnyCommand::AnyCommand(const std::string &name, const TgBot::Message::Ptr &message) {
 		_message = message;
-		_type = type::ANY;
+		_type = ANY;
 		_name = name;
 	}
 	MacroCommand::MacroCommand(const std::string &name, const TgBot::Message::Ptr &message) {
 		_message = message;
-		_type = type::MACRO;
+		_type = MACRO;
 		_name = name;
 	}
 	InlineCommand::InlineCommand(const std::string &name, const TgBot::CallbackQuery::Ptr &query) {
 		_query = query;
-		_type = type::INLINE;
+		_type = INLINE;
 		_name = name;
 	}
 

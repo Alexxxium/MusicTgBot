@@ -5,7 +5,7 @@
 
 int main()
 {
-	auto *bot = ctrl::BotController::getInstanse(TOKEN);
+	auto *bot = ctrl::BotController::getInstanse(init::TOKEN);
 	bot->initCommands(init::CMD_BASE);
 	bot->listen();
 }
