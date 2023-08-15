@@ -1,4 +1,5 @@
 #include "BotController.h"
+#include "AnyCommands.h"
 #include "constants.h"
 #include "parsers.h"
 #include <unordered_map>
@@ -54,8 +55,13 @@ namespace mb
 			}
 		});
 		
-		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr message) {
-			
+		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) {
+			auto *any_cmd = cmd::any::getHandler(message);
+			if (any_cmd) {
+				std::unique_ptr<cmd::Command> wrap(any_cmd);
+				wrap->setMessage(message);
+				wrap->execute(bot);
+			}
 		});
 	}
 
