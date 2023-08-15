@@ -4,13 +4,13 @@
 
 namespace mb::cmd::inl
 {
-	class PlayLists: public InlineCommand
+	class PlayListPressed: public InlineCommand
 	{
 	public:
-		PlayLists () = delete;
-		~PlayLists() = default;
-		explicit PlayLists(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new PlayLists(*this); }
+		PlayListPressed () = delete;
+		~PlayListPressed() = default;
+		explicit PlayListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new PlayListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

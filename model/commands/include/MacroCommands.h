@@ -26,13 +26,13 @@ namespace mb::cmd::mcr
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
-	class ShowPlayList: public MacroCommand
+	class ShowPlayLists: public MacroCommand
 	{
 	public:
-		ShowPlayList () = delete;
-		~ShowPlayList() = default;
-		ShowPlayList (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
-		Command* clone() const noexcept override { return new ShowPlayList(*this); }
+		ShowPlayLists () = delete;
+		~ShowPlayLists() = default;
+		ShowPlayLists (const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): MacroCommand(name, message) {}
+		Command* clone() const noexcept override { return new ShowPlayLists(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

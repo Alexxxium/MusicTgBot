@@ -17,8 +17,15 @@ namespace mb::core
 
 	std::string suffixCmd(const std::string &cmd_name) {
 		std::stringstream stream(cmd_name);
-		std::string res;
-		stream >> res >> res;
+		std::ostringstream out;
+		std::string res, buff;
+		stream >> buff;
+
+		std::getline(stream, res);
+
+		if (res.size() > 0 && res[0] == ' ') {
+			res.erase(res.begin());
+		}
 		return res;
 	}
 

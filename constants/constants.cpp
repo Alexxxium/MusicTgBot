@@ -15,37 +15,42 @@ namespace mb
 
 
 	const std::string
-		btn::CMD_BTN_START       = "/start",
-		btn::CMD_BTN_INFO        = "/info",
-		btn::CMD_BTN_PLAYLISTS   = "/playlists",
-		btn::BTN_EMPTY_PLAYLIST  = u8"Плейлист пуст",
-		btn::BTN_ADD_PLAYLIST    = u8"Добавить плейлист",
-		btn::BTN_REMOVE_PLAYLIST = u8"Удалить плейлист",
-		btn::BTN_ADD_TRACK       = u8"Добавить трек";
+		btn::CMD_BTN_START        = "/start",
+		btn::CMD_BTN_INFO         = "/info",
+		btn::CMD_BTN_PLAYLISTS    = "/playlists",
+		btn::BTN_EMPTY_PLAYLIST   = u8"Плейлист пуст",
+		btn::BTN_ADD_PLAYLIST     = u8"Добавить плейлист",
+		btn::BTN_REMOVE_PLAYLIST  = u8"Удалить плейлист",
+		btn::BTN_ADD_TRACK        = u8"Добавить трек";
 
 
 	
 	const std::exception
-		err::EMBARGO             ("This code area is banned!"),
-		err::CANT_OPEN_HTML_FILE ("Can`t open file.html!"),
-		err::CANT_OPEN_TXT_FILE  ("Cant`t open file.txt!");
+		err::EMBARGO              ("This code area is banned!"),
+		err::CANT_OPEN_HTML_FILE  ("Can`t open file.html!"),
+		err::CANT_OPEN_TXT_FILE   ("Cant`t open file.txt!");
 
 
 
 	const std::string
-		pth::USER_DATA_DIR = u8"D:/C++ prog/MusicTgBot/test data/",
-		pth::MESSAGE_DIR   = u8"D:/C++ prog/MusicTgBot/constants/messages/",
-		pth::BUFFER_DIR    = u8"D:/C++ prog/MusicTgBot/test data/buffer/",
-		pth::WELCOME_FILE  = u8"welcome.html",
-		pth::INFO_FILE     = u8"info.html";
+		pth::USER_DATA_DIR         = u8"D:/C++ prog/MusicTgBot/test data/",
+		pth::MESSAGE_DIR           = u8"D:/C++ prog/MusicTgBot/constants/messages/",
+		pth::BUFFER_DIR            = u8"D:/C++ prog/MusicTgBot/test data/buffer/",
+		pth::WELCOME               = u8"welcome.html",
+		pth::INFO                  = u8"info.html",
+		pth::PLISTS_HEADER         = u8"Plists_header.html",
+		pth::ADD_PLIST_MESSAGE     = u8"AddPlistMessage.html";
 
 
 
 	const std::string init::TOKEN = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
 
 	const std::vector<cmd::Command*> init::CMD_BASE {
-		new mcr::Start("start"),
-			new mcr::Info("info"),
+		new mcr::Start              ("start"),
+		new mcr::Info               ("info"),
+		new mcr::ShowPlayLists      ("playlists"),
+		new inl::PlayListPressed    (std::to_string(CBQ_SHOW_PLAYLIST)),
+		new inl::AddPlaylistPressed (std::to_string(CBQ_ADD_PLAYLIST))
 	};
 
 	TgBot::ReplyKeyboardMarkup::Ptr init::initMacroKeyboard() {

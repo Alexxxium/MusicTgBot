@@ -16,7 +16,7 @@ namespace mb
 	};
 
 
-/// MARKUPS TYPES:
+/// MARKUP TYPES:
 	class mrk {
 	public:
 		static const std::string
@@ -39,7 +39,7 @@ namespace mb
 	};
 
 
-/// INITIALIZE DATA:
+/// INITIALIZE DATA AND COMMANDLET:
 	class init {
 	public:
 		static const std::string TOKEN;
@@ -65,7 +65,9 @@ namespace mb
 			USER_DATA_DIR,
 			MESSAGE_DIR,
 			BUFFER_DIR,
-			WELCOME_FILE,
-			INFO_FILE;
+			WELCOME,
+			INFO,
+			PLISTS_HEADER,
+			ADD_PLIST_MESSAGE;
 	};
 }
