@@ -14,12 +14,10 @@ find_package(CURL)
 
 include_directories(${OPENSSL_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 
-
 if (CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
 endif()
-
 
 set(TgBot "D:/Libs/vcpkg/installed/x64-windows/lib/TgBot.lib")
 
@@ -36,17 +34,14 @@ set(SOURCES
     core/source/userdata.cpp
 )
 
-
 add_executable(MusicBot ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     constants
     controller
-    controller/constants
     model/commands/include
     model/keyboards 
-    core/include
-
+    core/include 
 )
 
 target_link_libraries(MusicBot ${TgBot} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})

@@ -1,8 +1,16 @@
 #include "Command.h"
 #include "constants.h"
 
-namespace cmd
+
+namespace mb::cmd
 {
+	inline void Command::log() const noexcept {
+		std::cout <<
+			"-l command log:" << '\n' <<
+			"type:  \t" << type() << '\n' <<
+			"name:  \t" << name() << '\n' << std::endl;
+	}
+
 	void AnyCommand::log() const noexcept {
 		Command::log();
 	}
@@ -23,37 +31,34 @@ namespace cmd
 		return new InlineCommand(*this);
 	}
 
-	inline void Command::log() const noexcept {
-		std::cout <<
-			"-l command log:" << '\n' <<
-			"type:  \t" << type() << '\n' <<
-			"name:  \t" << name() << '\n' << std::endl;
-	}
-	inline std::string Command::type() const noexcept {
+
+	inline int Command::type() const noexcept {
 		return _type;
 	}
 	inline std::string Command::name() const noexcept {
 		return _name;
 	}
 	
-	std::string AnyCommand::type() const noexcept {
+
+	int AnyCommand::type() const noexcept {
 		return Command::type();
 	}
 	std::string AnyCommand::name() const noexcept {
 		return Command::name();
 	}
-	std::string MacroCommand::type() const noexcept {
+	int MacroCommand::type() const noexcept {
 		return Command::type();
 	}
 	std::string MacroCommand::name() const noexcept {
 		return Command::name();
 	}
-	std::string InlineCommand::type() const noexcept {
+	int InlineCommand::type() const noexcept {
 		return Command::type();
 	}
 	std::string InlineCommand::name() const noexcept {
 		return Command::name();
 	}
+
 
 	void AnyCommand::setMessage(const TgBot::Message::Ptr &message) {
 		_message = message;
@@ -68,22 +73,22 @@ namespace cmd
 
 	AnyCommand::AnyCommand(const std::string &name, const TgBot::Message::Ptr &message) {
 		_message = message;
-		_type = ANY;
+		_type = CMD_TYPE_ANY;
 		_name = name;
 	}
 	MacroCommand::MacroCommand(const std::string &name, const TgBot::Message::Ptr &message) {
 		_message = message;
-		_type = MACRO;
+		_type = CMD_TYPE_MACRO;
 		_name = name;
 	}
 	InlineCommand::InlineCommand(const std::string &name, const TgBot::CallbackQuery::Ptr &query) {
 		_query = query;
-		_type = INLINE;
+		_type = CMD_TYPE_INLINE;
 		_name = name;
 	}
 
 
-// Embargo:
+/// EMBARGO:
 	bool AnyCommand::execute(TgBot::Bot &bot) const {
 		throw err::EMBARGO;
 	}

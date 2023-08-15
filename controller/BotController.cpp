@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 
-namespace ctrl
+namespace mb
 {
 	BotController* BotController::singleton = nullptr;
 
@@ -21,39 +21,41 @@ namespace ctrl
 		return singleton;
 	}
 
+
 	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
 		std::unordered_map<std::string, cmd::Command*> inl_cmds;
 
-		for (const auto &cmd : commands) {
-
+		for (const auto &cmd: commands) {
 			const auto type = cmd->type();
 			std::shared_ptr<cmd::Command> clone(cmd->clone());
 
-			if (type == cmd::MACRO) {
-				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr message) {          /// use clone from command base and set needed argument!
+			if (type == CMD_TYPE_MACRO) {
+				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr &message) {          /// use clone from command base and set needed argument!
 					clone->setMessage(message);
 					clone->execute(bot);
-					});
+				});
 			}
-			else if (type == cmd::INLINE) {                                                         /// remembering inl. command!
+			else if (type == CMD_TYPE_INLINE) {                                                            /// remembering inl. command!
 				inl_cmds.insert({ core::prefixCmd(clone->name()), cmd });
 			}
-			else if (type == cmd::ANY) {
+			else if (type == CMD_TYPE_ANY) {
 
 			}
 		}
 
-		bot.getEvents().onCallbackQuery([&, inl_cmds](TgBot::CallbackQuery::Ptr query) {                  /// find neaded inl. command and execute!
+		bot.getEvents().onCallbackQuery([&, inl_cmds](TgBot::CallbackQuery::Ptr &query) {                  /// find neaded inl. command and execute!
 			const auto &inl = inl_cmds.find(core::prefixCmd(query->data));
+
 			if (inl != inl_cmds.end()) {
 				std::unique_ptr<cmd::Command> wrap(inl->second->clone());
 				wrap->setCallbackQuery(query);
 				wrap->execute(bot);
 			}
 		});
-		bot.getEvents().onAnyMessage([](TgBot::Message::Ptr message) {
-
+		
+		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr message) {
+			
 		});
 	}
 

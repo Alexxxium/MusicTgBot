@@ -2,20 +2,22 @@
 #include <string>
 #include <tgbot/tgbot.h>
 
-namespace cmd
+
+namespace mb::cmd
 {   
-// Virtual base:
+/// VIRTUAL BASE:
 	class Command
 	{
 	protected:
-		std::string _type, _name;
+		int _type;
+		std::string _name;
 
 	public:
 		virtual ~Command() = default;
 
 		
 		virtual void        log             () const noexcept                        = 0;
-		virtual std::string type            () const noexcept                        = 0;
+		virtual int         type            () const noexcept                        = 0;
 		virtual std::string name            () const noexcept                        = 0;
 		virtual Command*    clone           () const noexcept                        = 0;
 		virtual bool        execute         (TgBot::Bot &bot) const                  = 0;
@@ -24,7 +26,7 @@ namespace cmd
 	};
 
 
-// Parents:
+/// COMMAND PARENTS:
 	class MacroCommand: public Command
 	{
 	protected:
@@ -39,7 +41,7 @@ namespace cmd
 
 
 		virtual void        log ()  const noexcept final;
-		virtual std::string type()  const noexcept final;
+		virtual int         type()  const noexcept final;
 		virtual std::string name()  const noexcept final;
 		virtual Command*    clone() const noexcept override;
 		virtual bool        execute(TgBot::Bot &bot) const override;                         /// <- BAN
@@ -69,7 +71,7 @@ namespace cmd
 
 
 		virtual void        log ()  const noexcept final;
-		virtual std::string type()  const noexcept final;
+		virtual int         type()  const noexcept final;
 		virtual std::string name()  const noexcept final;
 		virtual Command*    clone() const noexcept override;
 		virtual bool        execute(TgBot::Bot &bot) const override;                         /// <- BAN
@@ -99,7 +101,7 @@ namespace cmd
 
 
 		virtual void        log ()  const noexcept final;
-		virtual std::string type()  const noexcept final;
+		virtual int         type()  const noexcept final;
 		virtual std::string name()  const noexcept final;
 		virtual Command*    clone() const noexcept override;
 		virtual bool        execute(TgBot::Bot &bot) const override;                                /// <- BAN

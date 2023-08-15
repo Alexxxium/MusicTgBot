@@ -1,21 +1,19 @@
 #pragma once
+#include "Command.h"
 #include <tgbot/tgbot.h>
-#include <Command.h>
 
 
-namespace ctrl
+namespace mb
 {
 	class BotController
 	{
 	private:
-
 		TgBot::Bot bot;
 		static BotController *singleton;
 
 		BotController(const std::string &TOKEN);
 
 	public:
-
 		BotController() = delete;
 		~BotController() = delete;
 		BotController(BotController&&) = delete;

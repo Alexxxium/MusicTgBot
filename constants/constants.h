@@ -1,38 +1,71 @@
 #pragma once
-#include <tgbot/tgbot.h>
 #include "Command.h"
-#include <exception>
-#include <vector>
 
 
-
-namespace markup 
+namespace mb
 {
-	extern const std::string MARKDOWN, HTML;
-}
+/// COMMANDS ID (CBQ - CallBack Query, не сво):
+	enum types {
+		NONE,
+		CMD_TYPE_ANY,
+		CMD_TYPE_MACRO,
+		CMD_TYPE_INLINE,
 
-namespace cmd
-{
-	extern const std::string MACRO, INLINE, ANY;
-}
+		CBQ_ADD_PLAYLIST,
+		CBQ_SHOW_PLAYLIST,
+	};
 
-namespace err
-{
-	extern std::exception EMBARGO, CANT_OPEN_HTML;
-}
 
-namespace path
-{
-	extern const std::string MARKUP_DIR, WELCOME, INFO;
-}
+/// MARKUPS TYPES:
+	class mrk {
+	public:
+		static const std::string
+			MARKDOWN,
+			HTML;
+	};
 
-namespace init
-{
-	extern const std::string TOKEN;
 
-	/// BASE OF ALL BOT`S COMMANDS
-	extern const std::vector<cmd::Command*> CMD_BASE;
+/// TEXT IN TG BUTTONS:
+	class btn {
+	public:
+		static const std::string
+			CMD_BTN_START,
+			CMD_BTN_INFO,
+			CMD_BTN_PLAYLISTS,
+			BTN_EMPTY_PLAYLIST,
+			BTN_ADD_PLAYLIST,
+			BTN_REMOVE_PLAYLIST,
+			BTN_ADD_TRACK;
+	};
 
-	/// WRITTEN COMMANDS IN BOT
-	TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard();
+
+/// INITIALIZE DATA:
+	class init {
+	public:
+		static const std::string TOKEN;
+		static const std::vector<cmd::Command*> CMD_BASE;
+		static TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard();
+	};
+
+
+/// ERRORS:
+	class err {
+	public:
+		static const std::exception
+			EMBARGO,
+			CANT_OPEN_TXT_FILE,
+			CANT_OPEN_HTML_FILE;
+	};
+
+
+/// CONSTANTS OF PATHS:
+	class pth {
+	public:
+		static const std::string
+			USER_DATA_DIR,
+			MESSAGE_DIR,
+			BUFFER_DIR,
+			WELCOME_FILE,
+			INFO_FILE;
+	};
 }

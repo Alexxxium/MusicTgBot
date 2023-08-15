@@ -1,58 +1,63 @@
+#include "constants.h"
 #include "MacroCommands.h"
 #include "InlineCommands.h"
-#include "constants.h"
 
 
-
-
-
-
-namespace markup
-{
-	const std::string MARKDOWN = "Murkdown", HTML = "HTML";
-}
-
-namespace cmd
-{
-	const std::string MACRO = "MACRO", INLINE = "INLINE", ANY = "ANY";
-}
-
-namespace err
-{
-	std::exception 
-		EMBARGO("This code area is banned!"),
-		CANT_OPEN_HTML("Can`t open file.html!");
-}
-
-namespace path
-{
-	const std::string MARKUP_DIR = "D:/C++ prog/MusicBot/constants/messages/", WELCOME = "welcome.html", INFO = "info.html";
-}
-
-namespace init
+namespace mb 
 {
 	using namespace cmd;
 
-	const std::string TOKEN = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
 
-	const std::vector<cmd::Command*> CMD_BASE
-	{
+	const std::string 
+		mrk::MARKDOWN = "Markup",
+		mrk::HTML     = "HTML";
+
+
+
+	const std::string
+		btn::CMD_BTN_START       = "/start",
+		btn::CMD_BTN_INFO        = "/info",
+		btn::CMD_BTN_PLAYLISTS   = "/playlists",
+		btn::BTN_EMPTY_PLAYLIST  = u8"Плейлист пуст",
+		btn::BTN_ADD_PLAYLIST    = u8"Добавить плейлист",
+		btn::BTN_REMOVE_PLAYLIST = u8"Удалить плейлист",
+		btn::BTN_ADD_TRACK       = u8"Добавить трек";
+
+
+	
+	const std::exception
+		err::EMBARGO             ("This code area is banned!"),
+		err::CANT_OPEN_HTML_FILE ("Can`t open file.html!"),
+		err::CANT_OPEN_TXT_FILE  ("Cant`t open file.txt!");
+
+
+
+	const std::string
+		pth::USER_DATA_DIR = u8"D:/C++ prog/MusicTgBot/test data/",
+		pth::MESSAGE_DIR   = u8"D:/C++ prog/MusicTgBot/constants/messages/",
+		pth::BUFFER_DIR    = u8"D:/C++ prog/MusicTgBot/test data/buffer/",
+		pth::WELCOME_FILE  = u8"welcome.html",
+		pth::INFO_FILE     = u8"info.html";
+
+
+
+	const std::string init::TOKEN = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
+
+	const std::vector<cmd::Command*> init::CMD_BASE {
 		new mcr::Start("start"),
-		new mcr::Info("info"),
-		new mcr::ShowPlayList("playlists"),
-        new inl::PlayLists("1 3"),
-        new inl::PlayLists("2 2"),
-        new inl::PlayLists("3 1")
+			new mcr::Info("info"),
 	};
 
-	TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard() {
+	TgBot::ReplyKeyboardMarkup::Ptr init::initMacroKeyboard() {
 		TgBot::ReplyKeyboardMarkup::Ptr keyboard(new TgBot::ReplyKeyboardMarkup);
-		TgBot::KeyboardButton::Ptr cmd1(new TgBot::KeyboardButton); cmd1->text = "/info";
-		TgBot::KeyboardButton::Ptr cmd2(new TgBot::KeyboardButton); cmd2->text = "/playlists";
+		TgBot::KeyboardButton::Ptr info_btn(new TgBot::KeyboardButton);
+		TgBot::KeyboardButton::Ptr plists_btn(new TgBot::KeyboardButton);
+		info_btn->text = btn::CMD_BTN_INFO;
+		plists_btn->text = btn::CMD_BTN_PLAYLISTS;
 		keyboard->resizeKeyboard = true;
 		keyboard->oneTimeKeyboard = false;
-		keyboard->keyboard = { { cmd1, cmd2 } };
-		
+		keyboard->keyboard = { { info_btn, plists_btn } };
+
 		return keyboard;
 	}
 }
