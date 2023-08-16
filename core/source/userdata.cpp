@@ -41,4 +41,9 @@ namespace mb::core
 
 		return res;
 	}
+
+	void createPlaylist(const int64_t &user_id, const std::string &name) 
+	{
+		fs::create_directory(pth::USER_DATA_DIR + std::to_string(user_id) + "/" + name);
+	}
 }

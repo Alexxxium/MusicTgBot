@@ -1,9 +1,17 @@
 #pragma once
 #include <string>
+#include <tgbot/tgbot.h>
 
 
 namespace mb::core
 {
+	struct SerializeMessage
+	{
+	public:
+		int64_t id;
+		std::string text;
+	};
+
 	std::string prefixCmd(const std::string &cmd_name);
 	std::string suffixCmd(const std::string &cmd_name);
 	std::string parseHTML(const std::string &path);
