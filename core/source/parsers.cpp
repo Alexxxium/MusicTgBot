@@ -1,7 +1,9 @@
 #include "parsers.h"
 #include "constants.h"
+#include <codecvt>
 #include <fstream>
 #include <filesystem>
+#include <regex>
 
 
 namespace mb::core
@@ -17,10 +19,9 @@ namespace mb::core
 
 	std::string suffixCmd(const std::string &cmd_name) {
 		std::stringstream stream(cmd_name);
-		std::ostringstream out;
-		std::string res, buff;
-		stream >> buff;
+		std::string res;
 
+		stream >> res;
 		std::getline(stream, res);
 
 		if (res.size() > 0 && res[0] == ' ') {
@@ -32,9 +33,11 @@ namespace mb::core
 	std::string parseHTML(const std::string &path)
 	{
 		std::ifstream file(path);
+
 		if (!file.is_open()) {
 			throw mb::err::CANT_OPEN_HTML_FILE;
 		}
+
 		return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	}
 
@@ -55,12 +58,19 @@ namespace mb::core
 		return std::to_string(prefix) + " " + std::to_string(suffix);
 	}
 
-	std::string prevBotMessage(const int64_t &chat_id) {
-		return "";
+	std::wstring strUTF16(const std::string &utf8str) {
+		static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		return converter.from_bytes(utf8str);
 	}
 
+	bool isValidName(const std::string &file_or_dir) {
+		return isValidName(strUTF16(file_or_dir));
+	}
 
-	void updatePrevBotMessage(const int64_t &chat_id, const std::string &text) {
+	bool isValidName(const std::wstring &file_or_dir) {
+		constexpr auto regexstr = L"^[a-zA-Z0-9_\ à-ÿÀ-ÿ¸¨]+$";
+		std::wregex valid(regexstr);
 
+		return std::regex_search(file_or_dir, valid);
 	}
 }

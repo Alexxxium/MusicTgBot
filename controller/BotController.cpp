@@ -26,7 +26,7 @@ namespace mb
 	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
 		static std::unordered_map<std::string, cmd::Command*> inlcmds;
-		static std::unordered_map<int64_t, std::string> prev_messages;
+		static std::unordered_map<int64_t, std::string> prev_commands;
 
 
 		for (const auto &cmd: commands) {
@@ -38,7 +38,7 @@ namespace mb
 				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr &message) {          
 					clone->setMessage(message);
 					clone->execute(bot);
-					prev_messages[message->chat->id] = core::makeCallback(clone->type(), clone->name());      
+					prev_commands[message->chat->id] = core::makeCallback(clone->type(), clone->name());    // save command 
 				});
 			}
 			/// Writing inl. command base
@@ -56,27 +56,21 @@ namespace mb
 				wrap->setCallbackQuery(query);
 				wrap->execute(bot);
 			}
-			prev_messages[query->message->chat->id] = query->data;
+			prev_commands[query->message->chat->id] = query->data;
 		});
 
 		/// Validator of user input/response with delegate previos bot`s message state (was a fail input)
 		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) {                                    
-			auto handler = cmd::any::getHandler(message, prev_messages);
+			auto handler = cmd::any::getHandler(message, prev_commands);
 
 			if (handler) {
 				handler->setMessage(message);
 				bool res = handler->execute(bot);
 
 				if (res) {
-					prev_messages[message->chat->id] = core::makeCallback(NONE, NONE);
+					prev_commands[message->chat->id] = core::makeCallback(NONE, NONE);
 				}
 			}
-
-			/*auto &it = buffer.find(message->chat->id);
-			if (it != buffer.end()) {
-				std::cout << "Prev inl message: " << it->second << '\n';
-				it->second = core::makeCallback(NONE, NONE);
-			}*/
 		});
 	}
 
