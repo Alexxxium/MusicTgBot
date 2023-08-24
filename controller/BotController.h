@@ -1,6 +1,6 @@
 #pragma once
 #include "Command.h"
-#include <tgbot/tgbot.h>
+
 
 
 namespace mb
@@ -10,6 +10,9 @@ namespace mb
 	private:
 		TgBot::Bot bot;
 		static BotController *singleton;
+
+		std::unordered_map<std::string, cmd::Command*> inlcmds;
+		std::unordered_map<int64_t, std::string> prev_commands;
 
 		BotController(const std::string &TOKEN);
 

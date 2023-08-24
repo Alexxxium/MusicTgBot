@@ -7,7 +7,7 @@ namespace mb::core
 {
 	namespace fs = std::filesystem;
 
-	std::vector<std::string> getUserPlaylists(const int64_t &user_id)
+	std::vector<std::string> getPlayLists(const int64_t &user_id)
 	{
 		std::vector<std::string> res;
 		std::string target_dir = mb::pth::USER_DATA_DIR + std::to_string(user_id) + '/';
@@ -26,11 +26,16 @@ namespace mb::core
 		return res;
 	}
 
-	std::vector<std::string> getUserTracks(int64_t user_id, const std::string &playlist_name) 
+	std::vector<std::string> getPlayList(const int64_t &user_id, const std::string &playlist_name) 
 	{
+		constexpr auto mp3 = ".mp3", wav = ".wav", flac = ".flac", sl = "/";
+		
+		std::string target_dir = mb::pth::USER_DATA_DIR + std::to_string(user_id) + sl + playlist_name + sl;
 		std::vector<std::string> res;
-		std::string target_dir = mb::pth::USER_DATA_DIR + std::to_string(user_id) + '/' + playlist_name + '/';
-		constexpr auto mp3 = ".mp3", wav = ".wav", flac = ".flac";
+
+		if (!fs::exists(target_dir)) {
+			throw err::NOT_EXISTED_PLAYLIST;
+		}
 
 		for (const auto &entry: fs::directory_iterator(target_dir)) {
 			const auto &ext = entry.path().extension().string();
@@ -45,5 +50,26 @@ namespace mb::core
 	void createPlaylist(const int64_t &user_id, const std::string &name) 
 	{
 		fs::create_directory(pth::USER_DATA_DIR + std::to_string(user_id) + "/" + name);
+	}
+
+	void renamePlayList(const int64_t &user_id, const std::string &old_name, const std::string &new_name) 
+	{
+		constexpr auto sl = "/";
+		std::string pthold = pth::USER_DATA_DIR + std::to_string(user_id) + sl + old_name;
+		std::string pthnew = pth::USER_DATA_DIR + std::to_string(user_id) + sl + new_name;
+		
+		fs::rename(pthold, pthnew);
+	}
+
+	void removePlayList(const int64_t &user_id, const std::string &name) 
+	{
+		constexpr auto sl = "/";
+		const std::string path = pth::USER_DATA_DIR + std::to_string(user_id) + sl + name;
+
+		if (!fs::exists(path)) {
+			throw err::NOT_EXISTED_PLAYLIST;
+		}
+
+		fs::remove_all(pth::USER_DATA_DIR + std::to_string(user_id) + sl + name);
 	}
 }

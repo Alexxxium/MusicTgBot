@@ -25,11 +25,8 @@ namespace mb
 
 	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
-		static std::unordered_map<std::string, cmd::Command*> inlcmds;
-		static std::unordered_map<int64_t, std::string> prev_commands;
-
-
 		for (const auto &cmd: commands) {
+			
 			const auto &type = cmd->type();
 			std::shared_ptr<cmd::Command> clone(cmd->clone());
 
@@ -37,8 +34,9 @@ namespace mb
 			if (type == CMD_TYPE_MACRO) {
 				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr &message) {          
 					clone->setMessage(message);
-					clone->execute(bot);
-					prev_commands[message->chat->id] = core::makeCallback(clone->type(), clone->name());    // save command 
+					if (clone->execute(bot)) {
+						prev_commands[message->chat->id] = core::makeCallback(clone->type(), clone->name());    // save command if need
+					}
 				});
 			}
 			/// Writing inl. command base
@@ -54,20 +52,19 @@ namespace mb
 			if (inl != inlcmds.end()) {
 				std::unique_ptr<cmd::Command> wrap(inl->second->clone());
 				wrap->setCallbackQuery(query);
-				wrap->execute(bot);
+				if (wrap->execute(bot)) {
+					prev_commands[query->message->chat->id] = query->data;
+				}
 			}
-			prev_commands[query->message->chat->id] = query->data;
 		});
 
 		/// Validator of user input/response with delegate previos bot`s message state (was a fail input)
-		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) {                                    
-			auto handler = cmd::any::getHandler(message, prev_commands);
+		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) { 
+			std::unique_ptr<cmd::Command> handler(cmd::any::getHandler(message, prev_commands));
 
 			if (handler) {
 				handler->setMessage(message);
-				bool res = handler->execute(bot);
-
-				if (res) {
+				if (handler->execute(bot)) {
 					prev_commands[message->chat->id] = core::makeCallback(NONE, NONE);
 				}
 			}
@@ -76,7 +73,7 @@ namespace mb
 
 	void BotController::listen() noexcept
 	{
-		std::cout << "Listening...\n" << std::endl;
+		std::cout << "Bot id:\t" << bot.getApi().getMe()->id << "\nListening...\n" << std::endl;
 	
 		try {
 			bot.getApi().deleteWebhook();

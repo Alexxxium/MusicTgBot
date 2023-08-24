@@ -18,13 +18,16 @@ namespace mb::core
 	}
 
 	std::string suffixCmd(const std::string &cmd_name) {
+		constexpr char sp = ' ';
+		constexpr int sp_i = 0;
+
 		std::stringstream stream(cmd_name);
 		std::string res;
 
 		stream >> res;
 		std::getline(stream, res);
 
-		if (res.size() > 0 && res[0] == ' ') {
+		if (res.size() > sp_i && res[sp_i] == sp) {
 			res.erase(res.begin());
 		}
 		return res;
@@ -68,9 +71,30 @@ namespace mb::core
 	}
 
 	bool isValidName(const std::wstring &file_or_dir) {
-		constexpr auto regexstr = L"^[a-zA-Z0-9_\ à-ÿÀ-ÿ¸¨]+$";
+		constexpr auto regexstr = L"^[a-zA-Z0-9_.\ à-ÿÀ-ÿ]+$";
 		std::wregex valid(regexstr);
-
 		return std::regex_search(file_or_dir, valid);
+	}
+
+	// O(N) max N = 5 - 7 <- not problem
+	bool inCmdlet(const std::string &cmd_name) {
+		constexpr char   sl = '/';
+		constexpr size_t sl_i = 0;
+
+		std::string cmd_data;
+
+		if (cmd_name.size() > sl_i && cmd_name[sl_i] == sl) {
+			cmd_data = cmd_name.substr(sl_i + 1);
+		}	
+		else {
+			return false;
+		}
+		for (const auto &cmd: init::CMDLET) {
+			if (cmd->name() == cmd_data) {
+				return true;
+			}
+		}
+			
+		return false;
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <tgbot/tgbot.h>
+//#include <tgbot/tgbot.h>
 
 
 namespace mb::core
@@ -17,4 +17,6 @@ namespace mb::core
 	std::wstring strUTF16(const std::string &utf8str);
 	bool isValidName(const std::string  &file_or_dir);
 	bool isValidName(const std::wstring &file_or_dir);
+
+	bool inCmdlet(const std::string &cmd_name);
 }

@@ -11,8 +11,18 @@ namespace mb
 		CMD_TYPE_MACRO,
 		CMD_TYPE_INLINE,
 
+		CMD_REMOVE_PLAYLIST,
+
 		CBQ_ADD_PLAYLIST,
 		CBQ_SHOW_PLAYLIST,
+
+		CBQ_REMOVE_PLAYLIST,
+		CBQ_ADD_TRACKS,
+		CBQ_RENAME_PLAYLIST,
+		CBQ_UPLOAD_PLAYLIST,
+		CBQ_SHOW_TRACK,
+
+		CBQ_SELECT_YN,
 	};
 
 
@@ -32,10 +42,14 @@ namespace mb
 			CMD_BTN_START,
 			CMD_BTN_INFO,
 			CMD_BTN_PLAYLISTS,
-			BTN_EMPTY_PLAYLIST,
+
+			BTN_EMPTY_PLAYLISTS,
 			BTN_ADD_PLAYLIST,
+
 			BTN_REMOVE_PLAYLIST,
-			BTN_ADD_TRACK;
+			BTN_ADD_TRACKS,
+			BTN_RENAME_PLAYLIST,
+			BTN_UPLOAD_PLAYLIST;
 	};
 
 
@@ -43,8 +57,8 @@ namespace mb
 	class init {
 	public:
 		static const std::string TOKEN;
-		static const std::vector<cmd::Command*> CMD_BASE;
-		static TgBot::ReplyKeyboardMarkup::Ptr initMacroKeyboard();
+		static const std::vector<cmd::Command*> CMDLET;
+		static TgBot::ReplyKeyboardMarkup::Ptr  initMacroKeyboard();
 	};
 
 
@@ -54,7 +68,9 @@ namespace mb
 		static const std::exception
 			EMBARGO,
 			CANT_OPEN_TXT_FILE,
-			CANT_OPEN_HTML_FILE;
+			CANT_OPEN_HTML_FILE,
+			CANT_RENAME_PLAYLIST,
+			NOT_EXISTED_PLAYLIST;
 	};
 
 
@@ -65,9 +81,28 @@ namespace mb
 			USER_DATA_DIR,
 			MESSAGE_DIR,
 			BUFFER_DIR,
-			WELCOME,
-			INFO,
-			PLISTS_HEADER,
-			ADD_PLIST_MESSAGE;
+
+			HTML_WELCOME,
+			HTML_INFO,
+
+			HTML_PLISTS_HEADER,
+			HTML_ADD_PLIST_MESSAGE,
+
+			HTML_LITTLE_PLIST_NAME,
+			HTML_LARGE_PLIST_NAME,
+			HTML_EXISTED_PLIST_NAME,
+			HTML_UNCORRECT_PLIST_NAME,
+			HTML_CREATED_PLIST,
+
+			HTML_PLIST_HEADER,
+
+			HTML_SELECT_YN_PLIST,
+			
+			HTML_OLD_DATA;
 	};
+
+	bool operator==(types type, const std::string &str);
+	bool operator!=(types type, const std::string &str);
+	bool operator==(const std::string &str, types type);
+	bool operator!=(const std::string &str, types type);
 }

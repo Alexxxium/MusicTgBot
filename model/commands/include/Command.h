@@ -1,11 +1,11 @@
 #pragma once
-#include <string>
 #include <tgbot/tgbot.h>
+
 
 
 namespace mb::cmd
 {   
-/// VIRTUAL BASE:
+/// VIRTUAL BASE: Set message or callback query. Release logic in execute method
 	class Command
 	{
 	protected:
@@ -15,15 +15,28 @@ namespace mb::cmd
 	public:
 		virtual ~Command() = default;
 
-		
-		virtual void        log             () const noexcept                        = 0;
-		virtual int         type            () const noexcept                        = 0;
-		virtual std::string name            () const noexcept                        = 0;
-		virtual Command*    clone           () const noexcept                        = 0;
-		virtual bool        execute         (TgBot::Bot &bot) const                  = 0;
-		virtual void        setMessage      (const TgBot::Message::Ptr &message)     = 0;
+		// Print Command data in console
+		virtual void log() const noexcept = 0;
+
+		// Return intanger type of Command
+		virtual int type() const noexcept = 0;
+
+		// Return Command name ("some_type callback_data")
+		virtual std::string name() const noexcept = 0;
+
+		// Return silly pointer. WARNING: This method can returned NULL!
+		virtual Command* clone() const noexcept = 0;
+
+		// Contain basic logic and return bool value: true - flag to save command data in buffer, false - ignore saving
+		virtual bool execute (TgBot::Bot &bot) const = 0;
+
+		// Set message in Command. WARNING: This method banned in Inline Commands!
+		virtual void setMessage (const TgBot::Message::Ptr &message) = 0;
+
+		// Set callback query in Command. WARNING: This method banned in not Inline Commands!
 		virtual void        setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) = 0;
 	};
+
 
 
 /// COMMAND PARENTS:

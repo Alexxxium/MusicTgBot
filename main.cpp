@@ -6,6 +6,6 @@
 int main()
 {
 	auto *bot = mb::BotController::getInstanse(mb::init::TOKEN);
-	bot->initCommands(mb::init::CMD_BASE);
+	bot->initCommands(mb::init::CMDLET);
 	bot->listen();
 }
