@@ -5,7 +5,7 @@
 #include "userdata.h"
 #include "parsers.h"
 #include <filesystem>
-#include <regex>
+
 
 
 namespace mb::cmd::any
@@ -62,6 +62,8 @@ namespace mb::cmd::any
 		return true;
 	}
 
+
+
 	bool CreatePlayList::execute(TgBot::Bot &bot) const
 	{
 		log();
@@ -74,11 +76,7 @@ namespace mb::cmd::any
 
 		bot.getApi().sendMessage(_message->chat->id, core::parseHTML(pth::MESSAGE_DIR + pth::HTML_CREATED_PLIST), false, 0, nullptr, mrk::HTML);
 
-		std::unique_ptr<Command> plist(new mcr::ShowPlayLists(name()));
-		plist->setMessage(_message);
-		plist->execute(bot);
-
-		return true;
+		return Execute<mcr::ShowPlayLists>::execute(name(), _message, bot);
 	}
 
 	bool RenamePlayList::execute(TgBot::Bot &bot) const {
@@ -90,15 +88,6 @@ namespace mb::cmd::any
 
 		core::renamePlayList(_message->chat->id, name(), _message->text);
 
-		std::unique_ptr<Command>  plist(new inl::PlayListPressed(_message->text));
-		TgBot::CallbackQuery::Ptr cback(new TgBot::CallbackQuery);
-
-		cback->message = _message;
-		cback->data = core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text);
-
-		plist->setCallbackQuery(cback);
-		plist->execute(bot);
-		
-		return true;
+		return Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));
 	}
 }

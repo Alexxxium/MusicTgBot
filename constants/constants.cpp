@@ -34,7 +34,9 @@ namespace mb
 		err::CANT_OPEN_HTML_FILE       ("Can`t open file.html!"),
 		err::CANT_OPEN_TXT_FILE        ("Cant`t open file.txt!"),
 		err::CANT_RENAME_PLAYLIST      ("Can`t rename playlist!"),
-		err::NOT_EXISTED_PLAYLIST      ("Open not existed playlist!");
+		err::NOT_EXISTED_PLAYLIST      ("Open not existed playlist!"),
+		err::NULL_CMD_PTR              ("Command pointer is NULL!"),
+		err::UNKNOWN_CMD               ("Unknown Command!");
 	 
 
 

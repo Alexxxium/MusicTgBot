@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "Command.h"
 //#include <tgbot/tgbot.h>
 
 
@@ -19,4 +19,28 @@ namespace mb::core
 	bool isValidName(const std::wstring &file_or_dir);
 
 	bool inCmdlet(const std::string &cmd_name);
+
+	template<typename T>
+	bool executeCommand(cmd::Command *cmd, const T &setdata, TgBot::Bot &bot) {
+		
+		if (!cmd) {
+			throw err::NULL_CMD_PTR;
+		}
+
+		std::unique_ptr<cmd::Command> wrap(nullptr);
+
+		switch (cmd->type())
+		{
+		case CMD_TYPE_MACRO: case CMD_TYPE_ANY: 
+			wrap->setMessage(setdata);
+			break;
+		case CMD_TYPE_INLINE:
+			wrap->setCallbackQuery(setdata);
+			break;
+		default:
+			throw err::UNKNOWN_CMD;
+		}
+
+		return wrap->execute(bot);
+	}
 }

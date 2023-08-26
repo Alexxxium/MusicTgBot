@@ -39,6 +39,13 @@ namespace mb::cmd::inl
 
 	bool TrackPressed::execute(TgBot::Bot &bot) const {
 		log();
+		bot.getApi().sendMessage(_query->message->chat->id,
+			core::suffixCmd(_query->data),
+			false,
+			0,
+			InlKeyboardFactory::TrackMenu(_query->message->chat->id, core::suffixCmd(_query->data)),
+			mrk::HTML
+		);
 		return true;
 	}
 

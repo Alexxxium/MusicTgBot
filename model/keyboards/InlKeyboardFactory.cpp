@@ -41,6 +41,7 @@ namespace mb::cmd
 
 	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::PlayListMenu(const int64_t &user_id, const std::string &playlist_name)
 	{
+		constexpr auto sl = "/";
 		const auto &playlist = core::getPlayList(user_id, playlist_name);
 
 		TgBot::InlineKeyboardMarkup::Ptr keyboard   (new TgBot::InlineKeyboardMarkup);
@@ -73,7 +74,7 @@ namespace mb::cmd
 			TgBot::InlineKeyboardButton::Ptr track(new TgBot::InlineKeyboardButton);
 
 			track->text = track_name;
-			track->callbackData = core::makeCallback(CBQ_SHOW_TRACK, track_name);
+			track->callbackData = core::makeCallback(CBQ_SHOW_TRACK, playlist_name + sl + track_name);
 			keyboard->inlineKeyboard.push_back({ track });
 		}
 
@@ -83,9 +84,31 @@ namespace mb::cmd
 		return keyboard;
 	}
 
-	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::TrackMenu(const int64_t &user_id, const std::string &track_name) {
-		/// create keyboard with concreate track in PlayList
-		return nullptr;
+	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::TrackMenu(const int64_t &user_id, const std::string &track_local_path) 
+	{
+		TgBot::InlineKeyboardMarkup::Ptr keyboard(new TgBot::InlineKeyboardMarkup);
+		TgBot::InlineKeyboardButton::Ptr track (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr rename(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr remove(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr upload(new TgBot::InlineKeyboardButton);
+
+		rename->text = btn::BTN_RENAME_PLAYLIST;
+		remove->text = btn::BTN_REMOVE_PLAYLIST;
+		upload->text = btn::BTN_UPLOAD_PLAYLIST;
+		rename->callbackData = core::makeCallback(NONE, NONE);
+		remove->callbackData = core::makeCallback(NONE, NONE);
+		upload->callbackData = core::makeCallback(NONE, NONE);
+
+		track->text = track_local_path;                                           // callback!!! exist file!!!
+		track->callbackData = core::makeCallback(NONE, track_local_path);
+
+		keyboard->inlineKeyboard = {
+			{ track },
+			{ rename, remove },
+			{ upload }
+		};
+
+		return keyboard;
 	}
 
 	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::SelectMenu_YN(types inlcmd, const std::string &yes_callbackdata)
