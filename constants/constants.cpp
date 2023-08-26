@@ -28,8 +28,18 @@ namespace mb
 		btn::BTN_UPLOAD_PLAYLIST       = u8"Выгрузить";
 
 
+
+	BotError::BotError(const std::string &err_name):
+		std::exception(err_name.c_str())
+	{
+	}
+	BotError::BotError(const char *err_name):
+		std::exception(err_name)
+	{
+	}
+
 	
-	const std::exception
+	const BotError
 		err::EMBARGO                   ("This code area is banned!"),
 		err::CANT_OPEN_HTML_FILE       ("Can`t open file.html!"),
 		err::CANT_OPEN_TXT_FILE        ("Cant`t open file.txt!"),

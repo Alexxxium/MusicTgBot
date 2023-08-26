@@ -1,8 +1,7 @@
 #include "BotController.h"
 #include "AnyCommands.h"
+#include "validators.h"
 #include "constants.h"
-#include "parsers.h"
-#include <unordered_map>
 
 
 namespace mb
@@ -23,6 +22,7 @@ namespace mb
 	}
 
 
+
 	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
 		for (const auto &cmd: commands) {
@@ -35,7 +35,7 @@ namespace mb
 				bot.getEvents().onCommand(cmd->name(), [&, clone](TgBot::Message::Ptr &message) {          
 					clone->setMessage(message);
 					if (clone->execute(bot)) {
-						prev_commands[message->chat->id] = core::makeCallback(clone->type(), clone->name());    // save command if need
+						prev_commands[message->chat->id] = core::makeCallback(clone->type(), clone->name());    // save command in buffer if need
 					}
 				});
 			}
@@ -71,9 +71,22 @@ namespace mb
 		});
 	}
 
+
 	void BotController::listen() noexcept
 	{
-		std::cout << "Bot id:\t" << bot.getApi().getMe()->id << "\nListening...\n" << std::endl;
+		constexpr auto
+			bot_id    = "Bot id:\t",
+			listening = "Listening...",
+
+			bot_err      = "-b error:\t",
+			code_err     = "-c error:\t",
+			unknown_err  = "-u error:\t",
+			unknown_type = "Unknown type!";
+
+
+		std::cout << 
+			bot_id << bot.getApi().getMe()->id << '\n' << 
+			listening << '\n' << std::endl;
 	
 		try {
 			bot.getApi().deleteWebhook();
@@ -83,11 +96,14 @@ namespace mb
 				longPoll.start();
 			}
 		}
-		catch (const std::exception &exc) {
-			std::cout << "-b Error:\t" << exc.what() << std::endl;
+		catch (const BotError &err) {
+			std::cout << bot_err << err.what() << std::endl;
+		}
+		catch (const std::exception &err) {
+			std::cout << code_err << err.what() << std::endl;
 		}
 		catch (...) {
-			std::cout << "-u Error:\t" << "Unkown type" << std::endl;
+			std::cout << unknown_err << unknown_type << std::endl;
 		}
 	}
 }

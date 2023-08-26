@@ -63,9 +63,23 @@ namespace mb
 
 
 /// ERRORS:
+	class BotError: public std::exception
+	{
+	public:
+		BotError() = default;
+		~BotError() = default;
+		BotError(BotError&&) = delete;
+		BotError(const BotError&) = default;
+		BotError& operator=(BotError&&) = delete;
+		BotError& operator=(const BotError&) = default;
+
+		explicit BotError(const std::string &err_name);
+		explicit BotError(const char *err_name);
+	};
+
 	class err {
 	public:
-		static const std::exception
+		static const BotError
 			EMBARGO,
 			CANT_OPEN_TXT_FILE,
 			CANT_OPEN_HTML_FILE,

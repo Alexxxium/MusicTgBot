@@ -3,7 +3,7 @@
 #include "InlineCommands.h"
 #include "constants.h"
 #include "userdata.h"
-#include "parsers.h"
+#include "validators.h"
 #include <filesystem>
 
 
@@ -23,10 +23,10 @@ namespace mb::cmd::any
 		if (it == buffer.end()) {
 			return nullptr;
 		}
-		else if (core::prefixCmd(it->second) == std::to_string(CBQ_ADD_PLAYLIST)) {
+		else if (core::prefixCmd(it->second) == CBQ_ADD_PLAYLIST) {
 			return new CreatePlayList(std::to_string(NONE));
 		}
-		else if (core::prefixCmd(it->second) == std::to_string(CBQ_RENAME_PLAYLIST)) {
+		else if (core::prefixCmd(it->second) == CBQ_RENAME_PLAYLIST) {
 			return new RenamePlayList(core::suffixCmd(it->second));
 		}
 
@@ -86,8 +86,9 @@ namespace mb::cmd::any
 			return false;
 		}
 
-		core::renamePlayList(_message->chat->id, name(), _message->text);
-
-		return Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));
+		return core::protectedShell(_message->chat->id, bot, [&]() {
+			core::renamePlayList(_message->chat->id, _name, _message->text);
+			Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));
+		});
 	}
 }

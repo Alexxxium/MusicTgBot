@@ -2,7 +2,7 @@
 #include "InlKeyboardFactory.h"
 #include "MacroCommands.h"
 #include "constants.h"
-#include "parsers.h"
+#include "validators.h"
 #include "userdata.h"
 
 
@@ -16,16 +16,11 @@ namespace mb::cmd::inl
 		const int64_t &id = _query->message->chat->id;
 		const std::string data = core::suffixCmd(_query->data);
 	    const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_PLIST_HEADER) + bi_s + data + bi_e;
+		TgBot::InlineKeyboardMarkup::Ptr board;
 
-		try {
+		return core::protectedShell(id, bot, [&]() {
 			bot.getApi().sendMessage(id, html, false, 0, InlKeyboardFactory::PlayListMenu(id, data), mrk::HTML);
-		}
-		catch (const std::exception &exc) {
-			bot.getApi().sendMessage(id, core::parseHTML(pth::MESSAGE_DIR + pth::HTML_OLD_DATA), false, 0, nullptr, mrk::HTML);
-			return false;
-		}
-
-		return true;
+		});
 	}
 
 	bool AddPlaylistPressed::execute(TgBot::Bot &bot) const {
@@ -105,14 +100,9 @@ namespace mb::cmd::inl
 			return true;
 		}
 
-		try {
+		return core::protectedShell(id, bot, [&]() {
 			core::removePlayList(id, cback);
 			reserver();
-		}
-		catch (const std::exception &exc) {
-			bot.getApi().sendMessage(id, core::parseHTML(pth::MESSAGE_DIR + pth::HTML_OLD_DATA), false, 0, nullptr, mrk::HTML);
-		}
-
-		return true;
+		});
 	}
 }

@@ -30,7 +30,7 @@ set(SOURCES
     model/commands/source/MacroCommands.cpp 
     model/commands/source/Command.cpp 
     model/keyboards/InlKeyboardFactory.cpp 
-    core/source/parsers.cpp
+    core/source/validators.cpp
     core/source/userdata.cpp
 )
 

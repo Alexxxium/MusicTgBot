@@ -5,10 +5,15 @@
 namespace mb::cmd
 {
 	inline void Command::log() const noexcept {
+		constexpr auto
+			cmd_log  = "-l command log",
+			cmd_type = "type:  \t",
+			cmd_name = "name:  \t";
+
 		std::cout <<
-			"-l command log:" << '\n' <<
-			"type:  \t" << type() << '\n' <<
-			"name:  \t" << name() << '\n' << std::endl;
+			cmd_log << '\n' <<
+			cmd_type << type() << '\n' <<
+			cmd_name << name() << '\n' << std::endl;
 	}
 
 	void AnyCommand::log() const noexcept {

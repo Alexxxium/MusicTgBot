@@ -5,7 +5,7 @@
 
 namespace mb::cmd
 {   
-/// VIRTUAL BASE: Set message or callback query. Release logic in execute method
+/// VIRTUAL BASE: Set message or callback query and describe basic logic in execute method
 	class Command
 	{
 	protected:
@@ -18,13 +18,13 @@ namespace mb::cmd
 		// Print Command data in console
 		virtual void log() const noexcept = 0;
 
-		// Return intanger type of Command
+		// Return intager type of Command
 		virtual int type() const noexcept = 0;
 
-		// Return Command name ("some_type callback_data")
+		// Return Command name ("identify_type" "callback data ...")
 		virtual std::string name() const noexcept = 0;
 
-		// Return silly pointer. WARNING: This method can returned NULL!
+		// Return silly pointer to copy
 		virtual Command* clone() const noexcept = 0;
 
 		// Contain basic logic and return bool value: true - flag to save command data in buffer, false - ignore saving
@@ -34,11 +34,11 @@ namespace mb::cmd
 		virtual void setMessage (const TgBot::Message::Ptr &message) = 0;
 
 		// Set callback query in Command. WARNING: This method banned in not Inline Commands!
-		virtual void        setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) = 0;
+		virtual void setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) = 0;
 	};
 
 
-/// COMMAND PARENTS:
+/// MACRO COMMAND PARENT: Describe getters and setters except setCallbackQuery
 	class MacroCommand: public Command
 	{
 	protected:
@@ -68,7 +68,7 @@ namespace mb::cmd
 	};
 
 
-
+/// INLINE COMMAND PARENT: Describe getters and setters except setMessage
 	class InlineCommand: public Command
 	{
 	protected:
@@ -98,7 +98,7 @@ namespace mb::cmd
 	};
 
 
-
+/// ANY COMMAND PARENT: Describe getters and setters except setCallbackQuery
 	class AnyCommand: public Command
 	{
 	protected:
@@ -128,33 +128,14 @@ namespace mb::cmd
 	};
 
 
-	/// EXECUTER OF COMMANDS:
+/// EXECUTER OF COMMANDS: Use if need make disposable protected command shell to invoke execute method
 	template <class T>
 	struct Execute
 	{
 	public:
-		static bool execute(const std::string &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "") {
-			std::unique_ptr<Command> wrap(new T(cmdname));
-
-			switch (wrap->type())
-			{
-			case CMD_TYPE_MACRO: case CMD_TYPE_ANY: {
-				wrap->setMessage(message);
-				break;
-			}
-			case CMD_TYPE_INLINE: {
-				TgBot::CallbackQuery::Ptr query(new TgBot::CallbackQuery);
-				query->message = message;
-				query->data = callback;
-				wrap->setCallbackQuery(query);
-				break;
-			}
-			default:
-				throw err::UNKNOWN_CMD;
-				break;
-			}
-
-			return wrap->execute(bot);
-		}
+		// This method create simple wrapper of command template and execute 
+		static bool execute(const std::string &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "");
 	};
 }
+
+#include "Command.inl"

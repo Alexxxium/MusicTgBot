@@ -5,6 +5,7 @@
 
 namespace mb
 {
+/// Class to controll bot
 	class BotController
 	{
 	private:
@@ -26,7 +27,11 @@ namespace mb
 
 		static BotController* getInstanse(const std::string &TOKEN) noexcept;
 
+
+		// Iterate array and assign handlers: command shell of execute method
 		void initCommands(const std::vector<cmd::Command*> &cmds);
+
+		// Start bot
 		void listen() noexcept;
 	};
 }
