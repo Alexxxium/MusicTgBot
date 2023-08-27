@@ -37,17 +37,28 @@ namespace mb
 		std::exception(err_name)
 	{
 	}
+	DataError::DataError(const std::string &err_name) :
+		std::exception(err_name.c_str())
+	{
+	}
+	DataError::DataError(const char *err_name) :
+		std::exception(err_name)
+	{
+	}
 	
 	const BotError
 		err::EMBARGO                   ("This code area is banned!"),
 		err::CANT_OPEN_HTML_FILE       ("Can`t open file.html!"),
 		err::CANT_OPEN_TXT_FILE        ("Cant`t open file.txt!"),
 		err::CANT_RENAME_PLAYLIST      ("Can`t rename playlist!"),
+		err::UNKNOWN_CMD               ("Unknown Command!"),
+		err::NULL_CMD_PTR              ("Command pointer is NULL!");
+
+	const DataError
 		err::OLD_DATA                  ("Pressed old button reffering to old data!"),
 		err::NOT_EXISTED_PLAYLIST      ("Open not existed playlist!"),
-		err::NOT_EXISTED_TRACK         ("Open not existed track!"),
-		err::NULL_CMD_PTR              ("Command pointer is NULL!"),
-		err::UNKNOWN_CMD               ("Unknown Command!");
+		err::NOT_EXISTED_TRACK         ("Open not existed track!");
+		
 	 
 
 
@@ -71,6 +82,8 @@ namespace mb
 		pth::HTML_PLIST_HEADER         = u8"PlistHeader.html",
 		pth::HTML_TRACK_HEADER         = u8"TrackHeader.html",
 
+		pth::HTML_RENAME_TRACK_MESSAGE      = u8"RenameTrackMessage.html",
+
 		pth::HTML_SELECT_YN_PLIST      = u8"SelectYN(remove playlist).html",
 		
 		pth::HTML_OLD_DATA             = u8"OldData.html";
@@ -91,7 +104,8 @@ namespace mb
 		new inl::AddTracksPressed      (std::to_string(CBQ_ADD_TRACKS)),
 		new inl::UploadPListPressed    (std::to_string(CBQ_UPLOAD_PLAYLIST)),
 		new inl::TrackPressed          (std::to_string(CBQ_SHOW_TRACK)),
-		new inl::RemovePListPressed_YN (std::to_string(CBQ_SELECT_YN))
+		new inl::RemovePListPressed_YN (std::to_string(CBQ_SELECT_YN)),
+		new inl::RenameTrackPressed    (std::to_string(CBQ_RENAME_TRACK))
 	};
 
 	TgBot::ReplyKeyboardMarkup::Ptr init::initMacroKeyboard() {
@@ -122,4 +136,5 @@ namespace mb
 	bool operator!=(const std::string &str, types type) {
 		return type != str;
 	}
+	
 }

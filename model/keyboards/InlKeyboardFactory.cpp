@@ -93,20 +93,20 @@ namespace mb::cmd
 		}
 
 		TgBot::InlineKeyboardMarkup::Ptr keyboard(new TgBot::InlineKeyboardMarkup);
-		TgBot::InlineKeyboardButton::Ptr track (new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr rename(new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr remove(new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr upload(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr track   (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr rename  (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr remove  (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr upload  (new TgBot::InlineKeyboardButton);
 
 		rename->text = btn::BTN_RENAME_PLAYLIST;
 		remove->text = btn::BTN_REMOVE_PLAYLIST;
 		upload->text = btn::BTN_UPLOAD_PLAYLIST;
-		rename->callbackData = core::makeCallback(NONE, NONE);
-		remove->callbackData = core::makeCallback(NONE, NONE);
-		upload->callbackData = core::makeCallback(NONE, NONE);
+		rename->callbackData = core::makeCallback(CBQ_RENAME_TRACK, track_local_path);
+		remove->callbackData = core::makeCallback(CBQ_REMOVE_TRACK, track_local_path);
+		upload->callbackData = core::makeCallback(CBQ_UPLOAD_TRACK, track_local_path);
 
 		track->text = core::getTrack(user_id, track_local_path).first;
-		track->callbackData = core::makeCallback(NONE, track_local_path);
+		track->callbackData = core::makeCallback(CBQ_UPLOAD_TRACK, track_local_path);
 
 		keyboard->inlineKeyboard = {
 			{ track },

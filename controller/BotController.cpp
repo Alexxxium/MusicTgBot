@@ -51,15 +51,21 @@ namespace mb
 			const auto &inl = inlcmds.find(core::prefixCmd(query->data));
 
 			if (inl != inlcmds.end()) {
-				core::protectedShell(query->message->chat->id, bot, [&]() {
-					std::cout << core::suffixCmd(query->data) << '\n';
-					core::pathStressTest(core::makePath({pth::USER_DATA_DIR, std::to_string(query->message->chat->id), core::suffixCmd(query->data) }));
+				core::protectedShell(query->message->chat->id, bot, [&]() {                                    // handle not actual buttons clicks
+					std::string data = core::suffixCmd(query->data);
+					std::string id_str = std::to_string(query->message->chat->id);
+
+					if (data != NONE) {                                                                        // check state in filesystem -> handle exceptions
+						core::pathStressTest(core::makePath({ pth::USER_DATA_DIR, id_str, data }));
+					}
+		
+					std::unique_ptr<cmd::Command> wrap(inl->second->clone());
+					wrap->setCallbackQuery(query);
+
+					if (wrap->execute(bot)) {
+						prev_commands[query->message->chat->id] = query->data;
+					}
 				});
-				std::unique_ptr<cmd::Command> wrap(inl->second->clone());
-				wrap->setCallbackQuery(query);
-				if (wrap->execute(bot)) {
-					prev_commands[query->message->chat->id] = query->data;
-				}
 			}
 		});
 
@@ -80,11 +86,12 @@ namespace mb
 	void BotController::listen() noexcept
 	{
 		constexpr auto
-			bot_id    = "Bot id:\t",
-			listening = "Listening...",
+			bot_id       = "Bot id:\t",
+			listening    = "Listening...",
 
 			bot_err      = "-b error:\t",
 			code_err     = "-c error:\t",
+			data_err     = "-d error:\t",
 			unknown_err  = "-u error:\t",
 			unknown_type = "Unknown type!";
 
@@ -103,6 +110,9 @@ namespace mb
 		}
 		catch (const BotError &err) {
 			std::cout << bot_err << err.what() << std::endl;
+		}
+		catch (const DataError &err) {
+			std::cout << data_err << err.what() << std::endl;
 		}
 		catch (const std::exception &err) {
 			std::cout << code_err << err.what() << std::endl;

@@ -10,11 +10,8 @@ namespace mb::cmd::any
 	bool isValidFile(TgBot::Message::Ptr message, TgBot::Bot &bot);
 
 
-	class CreatePlayList: public AnyCommand
-	{
+	class CreatePlayList: public AnyCommand {
 	public:
-		CreatePlayList() = delete;
-		~CreatePlayList() = default;
 		explicit CreatePlayList(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): AnyCommand(name, message) {}
 		Command* clone() const noexcept override { return new CreatePlayList(*this); }
 
@@ -22,13 +19,19 @@ namespace mb::cmd::any
 	};
 
 	
-	class RenamePlayList: public AnyCommand
-	{
+	class RenamePlayList: public AnyCommand {
 	public:
-		RenamePlayList() = delete;
-		~RenamePlayList() = default;
 		explicit RenamePlayList(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): AnyCommand(name, message) {}
 		Command* clone() const noexcept override { return new RenamePlayList(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+	
+	class RenameTrack: public AnyCommand{
+	public:
+		explicit RenameTrack(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()) : AnyCommand(name, message) {}
+		Command* clone() const noexcept override { return new RenameTrack(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

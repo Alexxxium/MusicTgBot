@@ -81,6 +81,19 @@ namespace mb
 		explicit BotError(const char *err_name);
 	};
 
+	class DataError: public std::exception {
+	public:
+		DataError() = default;
+		~DataError() = default;
+		DataError(BotError&&) = delete;
+		DataError(const DataError&) = default;
+		DataError& operator=(DataError&&) = delete;
+		DataError& operator=(const DataError&) = default;
+
+		explicit DataError(const std::string &err_name);
+		explicit DataError(const char *err_name);
+	};
+
 	class err {
 	public:
 		static const BotError
@@ -88,11 +101,14 @@ namespace mb
 			CANT_OPEN_TXT_FILE,
 			CANT_OPEN_HTML_FILE,
 			CANT_RENAME_PLAYLIST,
-			OLD_DATA,
-			NOT_EXISTED_PLAYLIST,
-			NOT_EXISTED_TRACK,
+			
 			NULL_CMD_PTR,
 			UNKNOWN_CMD;
+
+		static const DataError
+			OLD_DATA,
+			NOT_EXISTED_PLAYLIST,
+			NOT_EXISTED_TRACK;
 	};
 
 
@@ -119,6 +135,8 @@ namespace mb
 
 			HTML_PLIST_HEADER,
 			HTML_TRACK_HEADER,
+
+			HTML_RENAME_TRACK_MESSAGE,
 
 			HTML_SELECT_YN_PLIST,
 			

@@ -19,16 +19,24 @@ namespace mb::cmd::any
 			return nullptr;
 		}
 
-		auto &it = buffer.find(message->chat->id);
+		const auto &it = buffer.find(message->chat->id);
+		
 
 		if (it == buffer.end()) {
 			return nullptr;
 		}
-		else if (core::prefixCmd(it->second) == CBQ_ADD_PLAYLIST) {
+
+		const auto &type = core::prefixCmd(it->second);
+		const auto &cback = core::prefixCmd(it->second);
+
+		if (type == CBQ_ADD_PLAYLIST) {
 			return new CreatePlayList(std::to_string(NONE));
 		}
-		else if (core::prefixCmd(it->second) == CBQ_RENAME_PLAYLIST) {
-			return new RenamePlayList(core::suffixCmd(it->second));
+		else if (type == CBQ_RENAME_PLAYLIST) {
+			return new RenamePlayList(cback);
+		}
+		else if (type == CBQ_RENAME_TRACK) {
+			return new
 		}
 
 		return nullptr;
@@ -80,9 +88,13 @@ namespace mb::cmd::any
 		if (!isValidName(_message, bot)) {
 			return false;
 		}
-		return core::protectedShell(_message->chat->id, bot, [&]() {
-			core::renamePlayList(_message->chat->id, _name, _message->text);
-			Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));
-		});
+		core::renamePlayList(_message->chat->id, _name, _message->text);
+		return Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));
+	}
+
+	bool RenameTrack::execute(TgBot::Bot &bot) const {
+		if (!isValidName(_message, bot)) {
+			return false;
+		}
 	}
 }

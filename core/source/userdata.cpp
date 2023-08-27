@@ -106,7 +106,7 @@ namespace mb::core
 		try {
 			func();
 		}
-		catch (const BotError &err) {
+		catch (const DataError &err) {
 			bot.getApi().sendMessage(id, text, false, 0, nullptr, mrk::HTML);
 			return false;
 		}
