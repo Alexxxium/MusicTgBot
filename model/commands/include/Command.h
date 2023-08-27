@@ -126,7 +126,7 @@ namespace mb::cmd
 		virtual ~AnyCommand() = default;
 		explicit AnyCommand(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr());
 	};
-
+	
 
 /// EXECUTER OF COMMANDS: Use if need make disposable protected command shell to invoke execute method
 	template <class T>
@@ -135,6 +135,7 @@ namespace mb::cmd
 	public:
 		// This method create simple wrapper of command template and execute 
 		static bool execute(const std::string &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "");
+		static bool execute(const int &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "");
 	};
 }
 

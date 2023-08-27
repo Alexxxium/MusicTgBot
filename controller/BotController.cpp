@@ -2,6 +2,7 @@
 #include "AnyCommands.h"
 #include "validators.h"
 #include "constants.h"
+#include "userdata.h"
 
 
 namespace mb
@@ -50,6 +51,10 @@ namespace mb
 			const auto &inl = inlcmds.find(core::prefixCmd(query->data));
 
 			if (inl != inlcmds.end()) {
+				core::protectedShell(query->message->chat->id, bot, [&]() {
+					std::cout << core::suffixCmd(query->data) << '\n';
+					core::pathStressTest(core::makePath({pth::USER_DATA_DIR, std::to_string(query->message->chat->id), core::suffixCmd(query->data) }));
+				});
 				std::unique_ptr<cmd::Command> wrap(inl->second->clone());
 				wrap->setCallbackQuery(query);
 				if (wrap->execute(bot)) {

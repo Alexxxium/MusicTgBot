@@ -4,7 +4,7 @@
 
 namespace mb::cmd::any
 {
-	// Return command-handler (reffering to previos invoke command). WARNING: Can return NULL!
+	// Return command-handler (checking previos invoke command and chousing handler). WARNING: Can return NULL!
 	Command* getHandler(TgBot::Message::Ptr &message, std::unordered_map<int64_t, std::string> &buffer);
 
 	bool isValidFile(TgBot::Message::Ptr message, TgBot::Bot &bot);

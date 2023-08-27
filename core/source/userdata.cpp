@@ -50,6 +50,22 @@ namespace mb::core
 		return res;
 	}
 
+	std::pair<std::string, std::string> getTrack(const int64_t &id, const std::string &local_path)
+	{
+		const std::string path = core::makePath(id, local_path);
+
+		if (!fs::exists(path)) {
+			throw err::NOT_EXISTED_TRACK;
+		}
+
+		return { 
+			fs::path(path).stem().string(),
+			fs::path(path).extension().string()
+		};
+	}
+
+
+
 	void createPlaylist(const int64_t &user_id, const std::string &name) 
 	{
 		fs::create_directory(pth::USER_DATA_DIR + std::to_string(user_id) + "/" + name);
@@ -82,9 +98,10 @@ namespace mb::core
 		fs::remove_all(pth::USER_DATA_DIR + std::to_string(user_id) + sl + name);
 	}
 
+
 	bool protectedShell(const int64_t &id, TgBot::Bot &bot, const std::function<void()> &func)
 	{
-		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_OLD_DATA);          // parse only one
+		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_OLD_DATA);
 		
 		try {
 			func();
@@ -95,5 +112,11 @@ namespace mb::core
 		}
 
 		return true;
+	}
+
+	void pathStressTest(const std::string &path) noexcept(false) {
+		if (!fs::exists(path)) {
+			throw err::OLD_DATA;
+		}
 	}
 }

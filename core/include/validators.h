@@ -15,9 +15,14 @@ namespace mb::core
 	std::string makeCallback(const int &prefix, const int &suffix);
 
 	std::wstring strUTF16(const std::string &utf8str);
+	bool exists(const int64_t &id, const std::string &local_path);
 
 	bool isValidName(const std::string  &file_or_dir);
 	bool isValidName(const std::wstring &file_or_dir);
-
+	
 	bool inCmdlet(const std::string &cmd_name);
+
+	std::string makePath(const std::vector<std::string> &list);
+	std::string makePath(const int64_t &id, const std::string &local_path);
+	std::vector<std::string> splitPath(const std::string &path);
 }

@@ -1,9 +1,10 @@
-#include "AnyCommands.h"
-#include "MacroCommands.h"
 #include "InlineCommands.h"
+#include "MacroCommands.h"
+#include "AnyCommands.h"
+#include "validators.h"
 #include "constants.h"
 #include "userdata.h"
-#include "validators.h"
+
 #include <filesystem>
 
 
@@ -36,7 +37,7 @@ namespace mb::cmd::any
 	bool isValidName(TgBot::Message::Ptr message, TgBot::Bot &bot) {
 		constexpr int8_t
 			minlen       = 1,
-			maxlen       = 25;
+			maxlen       = 60;
 		const auto &html = core::parseHTML;
 		const auto &text = message->text;
 		const auto &id   = message->chat->id;
@@ -66,26 +67,19 @@ namespace mb::cmd::any
 
 	bool CreatePlayList::execute(TgBot::Bot &bot) const
 	{
-		log();
-
 		if (!isValidName(_message, bot)) {
 			return false;
 		}
-
 		core::createPlaylist(_message->chat->id, _message->text);
 
 		bot.getApi().sendMessage(_message->chat->id, core::parseHTML(pth::MESSAGE_DIR + pth::HTML_CREATED_PLIST), false, 0, nullptr, mrk::HTML);
-
 		return Execute<mcr::ShowPlayLists>::execute(name(), _message, bot);
 	}
 
 	bool RenamePlayList::execute(TgBot::Bot &bot) const {
-		log();
-		
 		if (!isValidName(_message, bot)) {
 			return false;
 		}
-
 		return core::protectedShell(_message->chat->id, bot, [&]() {
 			core::renamePlayList(_message->chat->id, _name, _message->text);
 			Execute<inl::PlayListPressed>::execute(_message->text, _message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, _message->text));

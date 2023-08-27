@@ -5,6 +5,7 @@
 
 namespace mb::cmd
 {
+/// Dinamic factory of inline-keyboards
 	class InlKeyboardFactory
 	{
 	public:

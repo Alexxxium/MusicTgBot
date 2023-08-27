@@ -7,8 +7,6 @@ namespace mb::cmd::inl
 	class PlayListPressed: public InlineCommand
 	{
 	public:
-		PlayListPressed () = delete;
-		~PlayListPressed() = default;
 		explicit PlayListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new PlayListPressed(*this); }
 
@@ -18,8 +16,6 @@ namespace mb::cmd::inl
 	class AddPlaylistPressed: public InlineCommand
 	{
 	public:
-		AddPlaylistPressed() = delete;
-		~AddPlaylistPressed() = default;
 		explicit AddPlaylistPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new AddPlaylistPressed(*this); }
 
@@ -30,8 +26,6 @@ namespace mb::cmd::inl
 	class TrackPressed: public InlineCommand
 	{
 	public:
-		TrackPressed() = delete;
-		~TrackPressed() = default;
 		explicit TrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new TrackPressed(*this); }
 
@@ -41,8 +35,6 @@ namespace mb::cmd::inl
 	class RenamePListPressed: public InlineCommand
 	{
 	public:
-		RenamePListPressed() = delete;
-		~RenamePListPressed() = default;
 		explicit RenamePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new RenamePListPressed(*this); }
 
@@ -52,8 +44,6 @@ namespace mb::cmd::inl
 	class RemovePListPressed: public InlineCommand
 	{
 	public:
-		RemovePListPressed() = delete;
-		~RemovePListPressed() = default;
 		explicit RemovePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new RemovePListPressed(*this); }
 
@@ -63,8 +53,6 @@ namespace mb::cmd::inl
 	class AddTracksPressed: public InlineCommand
 	{
 	public:
-		AddTracksPressed() = delete;
-		~AddTracksPressed() = default;
 		explicit AddTracksPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new AddTracksPressed(*this); }
 
@@ -74,8 +62,6 @@ namespace mb::cmd::inl
 	class UploadPListPressed: public InlineCommand
 	{
 	public:
-		UploadPListPressed() = delete;
-		~UploadPListPressed() = default;
 		explicit UploadPListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new UploadPListPressed(*this); }
 
@@ -83,6 +69,16 @@ namespace mb::cmd::inl
 	};
 
 
+	class RenameTrackPressed: public InlineCommand
+	{
+	public:
+		explicit RenameTrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new RenameTrackPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+/// Yes/No menu to remove playlist 
 	class RemovePListPressed_YN: public InlineCommand
 	{
 	public:

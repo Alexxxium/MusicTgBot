@@ -25,4 +25,9 @@ namespace mb::cmd
 
 		return wrap->execute(bot);
 	}
+
+	template<typename T>
+	bool Execute<T>::execute(const int &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback) {
+		return execute(std::to_string(cmdname), message, bot, callback);
+	}
 }

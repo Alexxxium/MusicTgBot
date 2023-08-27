@@ -1,7 +1,8 @@
 #include "InlKeyboardFactory.h"
+#include "validators.h"
 #include "constants.h"
 #include "userdata.h"
-#include "validators.h"
+
 
 
 namespace mb::cmd
@@ -41,7 +42,7 @@ namespace mb::cmd
 
 	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::PlayListMenu(const int64_t &user_id, const std::string &playlist_name)
 	{
-		constexpr auto sl = "/";
+		constexpr int parts  = 2;
 		const auto &playlist = core::getPlayList(user_id, playlist_name);
 
 		TgBot::InlineKeyboardMarkup::Ptr keyboard   (new TgBot::InlineKeyboardMarkup);
@@ -55,7 +56,7 @@ namespace mb::cmd
 		removePList->text = btn::BTN_REMOVE_PLAYLIST;
 		uploadPList->text = btn::BTN_UPLOAD_PLAYLIST;
 
-		addTracks->callbackData   = core::makeCallback(CBQ_ADD_TRACKS, playlist_name);
+		addTracks->callbackData   = core::makeCallback(CBQ_ADD_TRACKS,      playlist_name);
 		renamePList->callbackData = core::makeCallback(CBQ_RENAME_PLAYLIST, playlist_name);
 		removePList->callbackData = core::makeCallback(CBQ_REMOVE_PLAYLIST, playlist_name);
 		uploadPList->callbackData = core::makeCallback(CBQ_UPLOAD_PLAYLIST, playlist_name);
@@ -72,9 +73,10 @@ namespace mb::cmd
 		}
 		for (const auto &track_name: playlist) {
 			TgBot::InlineKeyboardButton::Ptr track(new TgBot::InlineKeyboardButton);
+			std::string local_path = core::makePath({ playlist_name, track_name });
 
 			track->text = track_name;
-			track->callbackData = core::makeCallback(CBQ_SHOW_TRACK, playlist_name + sl + track_name);
+			track->callbackData = core::makeCallback(CBQ_SHOW_TRACK, local_path);
 			keyboard->inlineKeyboard.push_back({ track });
 		}
 
@@ -86,6 +88,10 @@ namespace mb::cmd
 
 	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::TrackMenu(const int64_t &user_id, const std::string &track_local_path) 
 	{
+		if (!core::exists(user_id, track_local_path)) {
+			throw err::NOT_EXISTED_TRACK;
+		}
+
 		TgBot::InlineKeyboardMarkup::Ptr keyboard(new TgBot::InlineKeyboardMarkup);
 		TgBot::InlineKeyboardButton::Ptr track (new TgBot::InlineKeyboardButton);
 		TgBot::InlineKeyboardButton::Ptr rename(new TgBot::InlineKeyboardButton);
@@ -99,7 +105,7 @@ namespace mb::cmd
 		remove->callbackData = core::makeCallback(NONE, NONE);
 		upload->callbackData = core::makeCallback(NONE, NONE);
 
-		track->text = track_local_path;                                           // callback!!! exist file!!!
+		track->text = core::getTrack(user_id, track_local_path).first;
 		track->callbackData = core::makeCallback(NONE, track_local_path);
 
 		keyboard->inlineKeyboard = {
@@ -129,5 +135,4 @@ namespace mb::cmd
 
 		return keyboard;
 	}
-
 }

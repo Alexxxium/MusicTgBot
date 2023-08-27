@@ -1,6 +1,7 @@
 #include "validators.h"
 #include "constants.h"
 #include <filesystem>
+#include <cstdarg>
 #include <codecvt>
 #include <fstream>
 #include <regex>
@@ -66,6 +67,10 @@ namespace mb::core
 		return converter.from_bytes(utf8str);
 	}
 
+	bool exists(const int64_t &id, const std::string &local_path) {
+		return fs::exists(core::makePath(id, local_path));
+	}
+
 	bool isValidName(const std::string &file_or_dir) {
 		return isValidName(strUTF16(file_or_dir));
 	}
@@ -76,7 +81,7 @@ namespace mb::core
 		return std::regex_search(file_or_dir, valid);
 	}
 
-	// O(N) max N = 5 - 7 <- not problem
+	// O(N) max N = 7 to 10 <- not problem
 	bool inCmdlet(const std::string &cmd_name) {
 		constexpr char   sl = '/';
 		constexpr size_t sl_i = 0;
@@ -96,5 +101,40 @@ namespace mb::core
 		}
 			
 		return false;
+	}
+
+	std::string makePath(const std::vector<std::string> &list) {
+		std::string res;
+		constexpr auto sep = "/";
+		auto it = list.begin(), end = list.end(), last = std::prev(end);
+		
+		for(it; it != end; ++it) {
+			res += (it == last) ? *it : *it + sep;
+		}
+		return res;
+	}
+
+	std::string makePath(const int64_t &id, const std::string &local_path) {
+		constexpr auto sl = "/";
+		return pth::USER_DATA_DIR + std::to_string(id) + sl + local_path;
+	}
+
+	std::vector<std::string> splitPath(const std::string &path) {
+		constexpr char sep = '/';
+
+		std::string part;
+		std::vector<std::string> res;
+
+		for (const auto &i: path) {
+			if (i != sep) {
+				part += i;
+			}
+			else {
+				res.push_back(part);
+				part.clear();
+			}
+		}
+
+		return res;
 	}
 }
