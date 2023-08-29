@@ -1,9 +1,7 @@
 #include "validators.h"
 #include "constants.h"
 #include <filesystem>
-#include <cstdarg>
 #include <codecvt>
-#include <fstream>
 #include <regex>
 
 
@@ -76,7 +74,7 @@ namespace mb::core
 	}
 
 	bool isValidName(const std::wstring &file_or_dir) {
-		constexpr auto regexstr = L"^[a-zA-Z0-9_.\ à-ÿÀ-ÿ]+$";
+		constexpr auto regexstr = L"^[a-zA-Z0-9_.-\ à-ÿÀ-ÿ]+$";
 		std::wregex valid(regexstr);
 		return std::regex_search(file_or_dir, valid);
 	}
@@ -136,5 +134,78 @@ namespace mb::core
 		}
 
 		return res;
+	}
+
+
+
+
+	bool isValidPlaylist(const std::string &name, TgBot::Message::Ptr message, TgBot::Bot &bot) {
+		constexpr int8_t
+			minlen = 1,
+			maxlen = 60;
+		const auto &id = message->chat->id;
+		std::string path = pth::USER_DATA_DIR + std::to_string(id) + "/" + name;
+
+		static std::string
+			LARGE = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_LARGE_PLIST_NAME),
+			LITTLE = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_LITTLE_PLIST_NAME),
+			UNCORRECT = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_UNCORRECT_PLIST_NAME),
+			EXISTED = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_EXISTED_PLIST_NAME);
+
+		if (name.size() > maxlen) {
+			bot.getApi().sendMessage(id, LARGE, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (name.size() < minlen) {
+			bot.getApi().sendMessage(id, LITTLE, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (!core::isValidName(name)) {
+			bot.getApi().sendMessage(id, UNCORRECT, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (fs::exists(path)) {
+			bot.getApi().sendMessage(id, EXISTED, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		return true;
+	}
+
+	bool isValidTrack(const std::string &local_path, TgBot::Message::Ptr message, TgBot::Bot &bot) {
+		constexpr int8_t
+			minlen = 1,
+			maxlen = 60;
+		const auto &id = message->chat->id;
+
+		std::string
+			path = pth::USER_DATA_DIR + std::to_string(id) + "/" + local_path,
+			name = fs::path(path).stem().string(),
+			ext = fs::path(path).extension().string();
+
+		static std::string
+			LARGE = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_LARGE_TRACK_NAME),
+			LITTLE = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_LITTLE_TRACK_NAME),
+			UNCORRECT = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_UNCORRECT_TRACK_NAME),
+			EXISTED = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_EXISTED_TRACK_NAME);
+
+		if (name.size() > maxlen) {
+			bot.getApi().sendMessage(id, LARGE, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (name.size() < minlen) {
+			bot.getApi().sendMessage(id, LITTLE, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (!core::isValidName(name)) {
+			bot.getApi().sendMessage(id, UNCORRECT, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+		if (fs::exists(path)) {
+			bot.getApi().sendMessage(id, EXISTED, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		return true;
 	}
 }

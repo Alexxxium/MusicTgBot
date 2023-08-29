@@ -41,11 +41,11 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
-	class RemovePListPressed: public InlineCommand
+	class PListPressed: public InlineCommand
 	{
 	public:
-		explicit RemovePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new RemovePListPressed(*this); }
+		explicit PListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new PListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
@@ -68,6 +68,13 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
+	class RemovePListPressed: public InlineCommand {
+	public:
+		explicit RemovePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new RemovePListPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
 
 	class RenameTrackPressed: public InlineCommand
 	{
@@ -78,7 +85,15 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
-/// Yes/No menu to remove playlist 
+	class RemoveTrackPressed: public InlineCommand {
+	public:
+		explicit RemoveTrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new RemoveTrackPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+
 	class RemovePListPressed_YN: public InlineCommand
 	{
 	public:
@@ -86,6 +101,16 @@ namespace mb::cmd::inl
 		~RemovePListPressed_YN() = default;
 		explicit RemovePListPressed_YN(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new RemovePListPressed_YN(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+	class RemoveTrackPressed_YN: public InlineCommand {
+	public:
+		RemoveTrackPressed_YN() = delete;
+		~RemoveTrackPressed_YN() = default;
+		explicit RemoveTrackPressed_YN(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new RemoveTrackPressed_YN(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

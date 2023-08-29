@@ -3,7 +3,7 @@
 
 
 
-int main()
+int main() 
 {
 	auto *bot = mb::BotController::getInstanse(mb::init::TOKEN);
 	bot->initCommands(mb::init::CMDLET);

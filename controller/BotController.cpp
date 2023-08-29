@@ -8,12 +8,13 @@
 namespace mb
 {
 	BotController* BotController::singleton = nullptr;
+	std::unordered_map<std::string, cmd::Command*> BotController::inlcmds = {};
+	std::unordered_map<int64_t, std::string> BotController::prev_commands = {};
 
-	BotController::BotController(const std::string &TOKEN) :
+	BotController::BotController(const std::string &TOKEN):
 		bot(TOKEN)
 	{
 	}
-
 	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept
 	{
 		if (!singleton) {
@@ -21,8 +22,37 @@ namespace mb
 		}
 		return singleton;
 	}
+	std::string BotController::bufferEntry(const int64_t &id) {
+		const auto &it = prev_commands.find(id);
+		return (it == prev_commands.end()) ? std::to_string(NONE) : it->second;
+	}
 
+	cmd::Command* BotController::getHandler(TgBot::Message::Ptr &message) {
+		if (core::inCmdlet(message->text)) {
+			return nullptr;
+		}
 
+		const auto &it = prev_commands.find(message->chat->id);
+
+		if (it == prev_commands.end()) {
+			return nullptr;
+		}
+
+		const auto &type  = core::prefixCmd(it->second);
+		const auto &cback = core::suffixCmd(it->second);
+
+		if (type == CBQ_ADD_PLAYLIST) {
+			return new cmd::any::CreatePlayList(std::to_string(NONE));
+		}
+		else if (type == CBQ_RENAME_PLAYLIST) {
+			return new cmd::any::RenamePlayList(cback);
+		}
+		else if (type == CBQ_RENAME_TRACK) {
+			return new cmd::any::RenameTrack(cback);
+		}
+
+		return nullptr;
+	}
 
 	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
 	{
@@ -51,11 +81,11 @@ namespace mb
 			const auto &inl = inlcmds.find(core::prefixCmd(query->data));
 
 			if (inl != inlcmds.end()) {
-				core::protectedShell(query->message->chat->id, bot, [&]() {                                    // handle not actual buttons clicks
+				core::protectedShell(query->message->chat->id, bot, [&]() {                                    // handling not actual buttons clicks
 					std::string data = core::suffixCmd(query->data);
 					std::string id_str = std::to_string(query->message->chat->id);
 
-					if (data != NONE) {                                                                        // check state in filesystem -> handle exceptions
+					if (data != NONE) {                                                                        // check state in filesystem -> throw exceptions
 						core::pathStressTest(core::makePath({ pth::USER_DATA_DIR, id_str, data }));
 					}
 		
@@ -71,7 +101,7 @@ namespace mb
 
 		/// Validator of user input/response with delegate previos bot`s message state (was a fail input)
 		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) { 
-			std::unique_ptr<cmd::Command> handler(cmd::any::getHandler(message, prev_commands));
+			std::unique_ptr<cmd::Command> handler(getHandler(message));
 
 			if (handler) {
 				handler->setMessage(message);
@@ -94,7 +124,6 @@ namespace mb
 			data_err     = "-d error:\t",
 			unknown_err  = "-u error:\t",
 			unknown_type = "Unknown type!";
-
 
 		std::cout << 
 			bot_id << bot.getApi().getMe()->id << '\n' << 

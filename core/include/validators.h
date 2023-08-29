@@ -25,4 +25,8 @@ namespace mb::core
 	std::string makePath(const std::vector<std::string> &list);
 	std::string makePath(const int64_t &id, const std::string &local_path);
 	std::vector<std::string> splitPath(const std::string &path);
+
+
+	bool isValidPlaylist(const std::string &name, TgBot::Message::Ptr message, TgBot::Bot &bot);
+	bool isValidTrack(const std::string &local_path, TgBot::Message::Ptr message, TgBot::Bot &bot);
 }

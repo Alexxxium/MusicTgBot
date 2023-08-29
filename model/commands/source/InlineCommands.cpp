@@ -1,21 +1,27 @@
 #include "InlineCommands.h"
 #include "InlKeyboardFactory.h"
+#include "BotController.h"
 #include "MacroCommands.h"
 #include "constants.h"
 #include "validators.h"
 #include "userdata.h"
 
+#include <filesystem>
+
 
 
 namespace mb::cmd::inl
 {
+	namespace fs = std::filesystem;
+
+
 	bool PlayListPressed::execute(TgBot::Bot &bot) const {
 		log();
 		const int64_t &id = _query->message->chat->id;
 		const std::string &data = core::suffixCmd(_query->data);
 
-		constexpr auto bi_s = "<b><i>", bi_e = "</i></b>";
-		static const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_PLIST_HEADER) + bi_s + data + bi_e;
+		constexpr auto bi_s = "<i>\"", bi_e = "\"</i>";
+		const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_PLIST_HEADER) + bi_s + data + bi_e;
 
 		bot.getApi().sendMessage(id, html, false, 0, InlKeyboardFactory::PlayListMenu(id, data), mrk::HTML);
 		return true;
@@ -40,9 +46,9 @@ namespace mb::cmd::inl
 	bool TrackPressed::execute(TgBot::Bot &bot) const {
 		log();
 		const int64_t &id = _query->message->chat->id;
-		const std::string cback = core::suffixCmd(_query->data);
+		const std::string &cback = core::suffixCmd(_query->data);
 
-		constexpr auto bi_s = "<b><i>", bi_e = "</i></b>";
+		constexpr auto bi_s = "<i>\"", bi_e = "\"</i>";
 		static const std::string header = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_TRACK_HEADER);
 		
 		const std::string &text = header + bi_s + core::getTrack(id, cback).first + bi_e;
@@ -62,20 +68,7 @@ namespace mb::cmd::inl
 		return true;
 	}
 
-	bool RemovePListPressed::execute(TgBot::Bot &bot) const {
-		log();
-		const int64_t &id = _query->message->chat->id;
-		const std::string &data = core::suffixCmd(_query->data);
-		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_SELECT_YN_PLIST);
-
-		const auto &board = InlKeyboardFactory::SelectMenu_YN(CBQ_SELECT_YN, data);
-
-		constexpr auto bi_s = "<b><i>", bi_e = "</i></b>", wh = "?";
-		const std::string html = text + bi_s + data + wh + bi_e;
-
-		bot.getApi().sendMessage(id, html, false, 0, board, mrk::HTML);
-		return true;
-	}
+	
 
 	bool AddTracksPressed::execute(TgBot::Bot &bot) const {
 		log();
@@ -95,6 +88,21 @@ namespace mb::cmd::inl
 		return true;
 	}
 
+	
+	bool RemovePListPressed::execute(TgBot::Bot &bot) const {
+		log();
+		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_SELECT_YN_PLIST);
+
+		const auto &board = InlKeyboardFactory::SelectMenu_YN(CBQ_REMOVE_PLAYLIST_YN, data);
+
+		constexpr auto bi_s = "<i>\"", bi_e = "\"</i>", wh = "?";
+		const std::string html = text + bi_s + data + wh + bi_e;
+
+		bot.getApi().sendMessage(id, html, false, 0, board, mrk::HTML);
+		return true;
+	}
 
 	bool RemovePListPressed_YN::execute(TgBot::Bot &bot) const {
 		log();
@@ -104,7 +112,37 @@ namespace mb::cmd::inl
 		if (data == NONE) {
 			return Execute<mcr::ShowPlayLists>::execute(NONE, _query->message, bot);
 		}
-		core::removePlayList(id, data);
+		core::remove(id, data);
 		return Execute<mcr::ShowPlayLists>::execute(NONE, _query->message, bot);
+	}
+
+	bool RemoveTrackPressed::execute(TgBot::Bot &bot) const {
+		log();
+		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_SELECT_YN_TACK);
+
+		const auto &board = InlKeyboardFactory::SelectMenu_YN(CBQ_REMOVE_TRACK_YN, data);
+
+		constexpr auto bi_s = "<i>\"", bi_e = "\"</i>", wh = "?";
+		const std::string html = text + bi_s + fs::path(data).stem().string() + wh + bi_e;
+
+		bot.getApi().sendMessage(id, html, false, 0, board, mrk::HTML);
+		return true;
+	}
+
+	bool RemoveTrackPressed_YN::execute(TgBot::Bot &bot) const {
+		log();
+		const int64_t &id = _query->message->chat->id;
+		const std::string &cback = core::suffixCmd(_query->data);
+
+		auto t = core::suffixCmd(BotController::bufferEntry(id));
+
+		if (core::prefixCmd(cback) == NONE) {
+			return Execute<inl::TrackPressed>::execute(CBQ_SHOW_TRACK, _query->message, bot, core::makeCallback(CBQ_SHOW_TRACK, t));
+		}
+		core::remove(id, cback);
+		std::string plist = *(core::splitPath(cback).begin());
+		return Execute<inl::PlayListPressed>::execute(CBQ_SHOW_PLAYLIST, _query->message, bot, core::makeCallback(CBQ_SHOW_PLAYLIST, plist));
 	}
 }

@@ -79,14 +79,31 @@ namespace mb
 		pth::HTML_EXISTED_PLIST_NAME   = u8"ExistedPlistName.html",
 		pth::HTML_UNCORRECT_PLIST_NAME = u8"UncorrectPlistName.html",
 		pth::HTML_CREATED_PLIST        = u8"CreatedPlist.html",
+
+		pth::HTML_LITTLE_TRACK_NAME    = u8"LittleTrackName.html",
+		pth::HTML_LARGE_TRACK_NAME     = u8"LargeTrackName.html",
+		pth::HTML_EXISTED_TRACK_NAME   = u8"ExistedTrackName.html",
+		pth::HTML_UNCORRECT_TRACK_NAME = u8"UncorrectTrackName.html",
+
 		pth::HTML_PLIST_HEADER         = u8"PlistHeader.html",
 		pth::HTML_TRACK_HEADER         = u8"TrackHeader.html",
 
-		pth::HTML_RENAME_TRACK_MESSAGE      = u8"RenameTrackMessage.html",
+		pth::HTML_RENAME_TRACK_MESSAGE = u8"RenameTrackMessage.html",
 
 		pth::HTML_SELECT_YN_PLIST      = u8"SelectYN(remove playlist).html",
+		pth::HTML_SELECT_YN_TACK       = u8"SelectYN(remove track).html",
 		
-		pth::HTML_OLD_DATA             = u8"OldData.html";
+		pth::HTML_OLD_DATA             = u8"OldData.html",
+		
+
+		pth::HTML_LITTLE_NAME          = u8"LittleName.html",
+		pth::HTML_LARGE_NAME           = u8"LargeName.html",
+		pth::HTML_EXISTED_NAME         = u8"ExistedName.html",
+		pth::HTML_UNCORRECT_NAME       = u8"UncorrectName.html",
+		pth::HTML_REMOVE_MESSAGE       = u8"SelectYN(remove).html",
+
+		pth::SUB_DIR_TO_PLIST          = u8"playlist/",
+		pth::SUB_DIR_TO_TRACK          = u8"track/";
 
 
 
@@ -100,12 +117,16 @@ namespace mb
 		new inl::PlayListPressed       (std::to_string(CBQ_SHOW_PLAYLIST)),
 		new inl::AddPlaylistPressed    (std::to_string(CBQ_ADD_PLAYLIST)),
 		new inl::RenamePListPressed    (std::to_string(CBQ_RENAME_PLAYLIST)),
-		new inl::RemovePListPressed    (std::to_string(CBQ_REMOVE_PLAYLIST)),
+		
 		new inl::AddTracksPressed      (std::to_string(CBQ_ADD_TRACKS)),
 		new inl::UploadPListPressed    (std::to_string(CBQ_UPLOAD_PLAYLIST)),
 		new inl::TrackPressed          (std::to_string(CBQ_SHOW_TRACK)),
-		new inl::RemovePListPressed_YN (std::to_string(CBQ_SELECT_YN)),
-		new inl::RenameTrackPressed    (std::to_string(CBQ_RENAME_TRACK))
+		new inl::RenameTrackPressed    (std::to_string(CBQ_RENAME_TRACK)),
+
+		new inl::RemovePListPressed    (std::to_string(CBQ_REMOVE_PLAYLIST)),
+		new inl::RemovePListPressed_YN (std::to_string(CBQ_REMOVE_PLAYLIST_YN)),
+		new inl::RemoveTrackPressed    (std::to_string(CBQ_REMOVE_TRACK)),
+		new inl::RemoveTrackPressed_YN (std::to_string(CBQ_REMOVE_TRACK_YN))
 	};
 
 	TgBot::ReplyKeyboardMarkup::Ptr init::initMacroKeyboard() {
