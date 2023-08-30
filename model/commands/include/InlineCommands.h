@@ -2,36 +2,29 @@
 #include "Command.h"
 
 
+
 namespace mb::cmd::inl
 {
-	class PlayListPressed: public InlineCommand
+	class AddPListPressed: public InlineCommand
 	{
 	public:
-		explicit PlayListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new PlayListPressed(*this); }
-
-		bool execute(TgBot::Bot &bot) const override;
-	};
-
-	class AddPlaylistPressed: public InlineCommand
-	{
-	public:
-		explicit AddPlaylistPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new AddPlaylistPressed(*this); }
+		explicit AddPListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new AddPListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
 
-	class TrackPressed: public InlineCommand
+
+	class PListPressed: public InlineCommand
 	{
 	public:
-		explicit TrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new TrackPressed(*this); }
+		explicit PListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new PListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
-
+	
 	class RenamePListPressed: public InlineCommand
 	{
 	public:
@@ -41,20 +34,10 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
-	class PListPressed: public InlineCommand
-	{
+	class RemovePListPressed: public InlineCommand {
 	public:
-		explicit PListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new PListPressed(*this); }
-
-		bool execute(TgBot::Bot &bot) const override;
-	};
-
-	class AddTracksPressed: public InlineCommand
-	{
-	public:
-		explicit AddTracksPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new AddTracksPressed(*this); }
+		explicit RemovePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new RemovePListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
@@ -62,16 +45,28 @@ namespace mb::cmd::inl
 	class UploadPListPressed: public InlineCommand
 	{
 	public:
-		explicit UploadPListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		explicit UploadPListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new UploadPListPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
-	class RemovePListPressed: public InlineCommand {
+	class AddTracksPressed: public InlineCommand
+	{
 	public:
-		explicit RemovePListPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
-		Command* clone() const noexcept override { return new RemovePListPressed(*this); }
+		explicit AddTracksPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new AddTracksPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+
+
+	class TrackPressed: public InlineCommand
+	{
+	public:
+		explicit TrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new TrackPressed(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
@@ -93,12 +88,19 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
+	class UploadTrackPressed: public InlineCommand {
+	public:
+		explicit UploadTrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new UploadTrackPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+
 
 	class RemovePListPressed_YN: public InlineCommand
 	{
 	public:
-		RemovePListPressed_YN() = delete;
-		~RemovePListPressed_YN() = default;
 		explicit RemovePListPressed_YN(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new RemovePListPressed_YN(*this); }
 
@@ -107,8 +109,6 @@ namespace mb::cmd::inl
 
 	class RemoveTrackPressed_YN: public InlineCommand {
 	public:
-		RemoveTrackPressed_YN() = delete;
-		~RemoveTrackPressed_YN() = default;
 		explicit RemoveTrackPressed_YN(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new RemoveTrackPressed_YN(*this); }
 

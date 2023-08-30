@@ -1,5 +1,6 @@
 #pragma once
 #include "Command.h"
+#include <unordered_set>
 
 
 namespace mb
@@ -49,25 +50,30 @@ namespace mb
 			CMD_BTN_PLAYLISTS,
 
 			BTN_EMPTY_PLAYLISTS,
+			BTN_EMPTY_PLAYLIST,
 			BTN_ADD_PLAYLIST,
 
-			BTN_REMOVE_PLAYLIST,
-			BTN_ADD_TRACKS,
-			BTN_RENAME_PLAYLIST,
-			BTN_UPLOAD_PLAYLIST;
+			BTN_ADD,
+			BTN_REMOVE,
+			BTN_RENAME,
+			BTN_UPLOAD;
 	};
 
 
-/// INITIALIZE DATA AND COMMANDLET:
+/// INITIALIZE: TOKEN, COMMANDLET, SUPPORTED FILE FORMATS AND GLOBAL KEYBOARD
 	class init {
 	public:
 		static const std::string TOKEN;
-		static const std::vector<cmd::Command*> CMDLET;
-		static TgBot::ReplyKeyboardMarkup::Ptr  initMacroKeyboard();
+		static const std::vector<cmd::Command*>       CMDLET;
+		static const std::unordered_set<std::string>  SUPEXT;
+		static TgBot::ReplyKeyboardMarkup::Ptr        initMacroKeyboard();
+		
 	};
 
 
 /// ERRORS:
+
+	// Other errors
 	class BotError: public std::exception
 	{
 	public:
@@ -82,6 +88,7 @@ namespace mb
 		explicit BotError(const char *err_name);
 	};
 
+	// Old data in buttons errors
 	class DataError: public std::exception {
 	public:
 		DataError() = default;
@@ -102,6 +109,9 @@ namespace mb
 			CANT_OPEN_TXT_FILE,
 			CANT_OPEN_HTML_FILE,
 			CANT_RENAME_PLAYLIST,
+			CANT_RENAME_TRACK,
+			UNKNOWN_SUBDIR,
+			UNCORREKT_PATH,
 			
 			NULL_CMD_PTR,
 			UNKNOWN_CMD;
@@ -109,7 +119,8 @@ namespace mb
 		static const DataError
 			OLD_DATA,
 			NOT_EXISTED_PLAYLIST,
-			NOT_EXISTED_TRACK;
+			NOT_EXISTED_TRACK,
+			NOT_EXISTED_DIR;
 	};
 
 
@@ -117,49 +128,35 @@ namespace mb
 	class pth {
 	public:
 		static const std::string
-			USER_DATA_DIR,
-			MESSAGE_DIR,
-			BUFFER_DIR,
-
+// Macro commands files:
 			HTML_WELCOME,
 			HTML_INFO,
 
-			HTML_PLISTS_HEADER,
-			HTML_MAX_COUNT_PLISTS,
-			HTML_ADD_PLIST_MESSAGE,
+// Dirs:
+			USER_DATA_DIR,
+			MESSAGE_DIR,
 
-			HTML_LITTLE_PLIST_NAME,
-			HTML_LARGE_PLIST_NAME,
-			HTML_EXISTED_PLIST_NAME,
-			HTML_UNCORRECT_PLIST_NAME,
-			HTML_CREATED_PLIST,
+// Sub dirs to sames html files:
+			SUB_DIR_TO_PLIST,
+			SUB_DIR_TO_TRACK,
 
-			HTML_LITTLE_TRACK_NAME,
-			HTML_LARGE_TRACK_NAME,
-			HTML_EXISTED_TRACK_NAME,
-			HTML_UNCORRECT_TRACK_NAME,
-
-			HTML_PLIST_HEADER,
-			HTML_TRACK_HEADER,
-
-			HTML_RENAME_TRACK_MESSAGE,
-
-			HTML_SELECT_YN_PLIST,
-			HTML_SELECT_YN_TACK,
-
-			HTML_OLD_DATA,
-
-
+// Same logic for view:
 			HTML_LITTLE_NAME,
 			HTML_LARGE_NAME,
 			HTML_EXISTED_NAME,
 			HTML_UNCORRECT_NAME,
 			HTML_REMOVE_MESSAGE,
+			HTML_RENAME_MESSAGE,
+			HTML_HEADER_MESSAGE,
+			HTML_MAX_COUNT_MESSAGE,
 
-
-			SUB_DIR_TO_PLIST,
-			SUB_DIR_TO_TRACK;
+// Other:
+			HTML_PLISTS_HEADER,
+			HTML_CREATED_PLIST,
+			HTML_OLD_DATA;
 	};
+
+
 
 	bool operator==(types type, const std::string &str);
 	bool operator!=(types type, const std::string &str);

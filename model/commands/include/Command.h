@@ -21,24 +21,24 @@ namespace mb::cmd
 		// Return intager type of Command
 		virtual int type() const noexcept = 0;
 
-		// Return Command name ("identify_type" "callback data ...")
+		// Return Command name ("identify_type" "callback data ... if need")
 		virtual std::string name() const noexcept = 0;
 
 		// Return silly pointer to copy
 		virtual Command* clone() const noexcept = 0;
 
-		// Contain basic logic and return bool value: true - flag to save command data in buffer, false - ignore saving
+		// Contain basic logic and return bool value: true - flag to save command name in buffer, false - ignore saving
 		virtual bool execute (TgBot::Bot &bot) const = 0;
 
-		// Set message in Command. WARNING: This method banned in Inline Commands!
+		// Set 'Message' in Command. WARNING: This method banned in Inline Commands!
 		virtual void setMessage (const TgBot::Message::Ptr &message) = 0;
 
-		// Set callback query in Command. WARNING: This method banned in not Inline Commands!
+		// Set 'CallbackQuery' in Command. WARNING: This method banned in not Inline Commands!
 		virtual void setCallbackQuery(const TgBot::CallbackQuery::Ptr &query) = 0;
 	};
 
 
-/// MACRO COMMAND PARENT: Describe getters and setters except setCallbackQuery
+/// MACRO COMMAND PARENT: Describe getters and setters except 'setCallbackQuery'
 	class MacroCommand: public Command
 	{
 	protected:
@@ -68,7 +68,7 @@ namespace mb::cmd
 	};
 
 
-/// INLINE COMMAND PARENT: Describe getters and setters except setMessage
+/// INLINE COMMAND PARENT: Describe getters and setters except 'setMessage'
 	class InlineCommand: public Command
 	{
 	protected:
@@ -98,7 +98,7 @@ namespace mb::cmd
 	};
 
 
-/// ANY COMMAND PARENT: Describe getters and setters except setCallbackQuery
+/// ANY COMMAND PARENT: Describe getters and setters except 'setCallbackQuery'
 	class AnyCommand: public Command
 	{
 	protected:
@@ -128,12 +128,11 @@ namespace mb::cmd
 	};
 	
 
-/// EXECUTER OF COMMANDS: Use if need make disposable protected command shell to invoke execute method
+/// EXECUTER OF COMMANDS: Use if need make disposable protected command shell for memory pointer to invoke execute method
 	template <class T>
 	struct Execute
 	{
 	public:
-		// This method create simple wrapper of command template and execute 
 		static bool execute(const std::string &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "");
 		static bool execute(const int &cmdname, TgBot::Message::Ptr message, TgBot::Bot &bot, const std::string &callback = "");
 	};

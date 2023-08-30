@@ -2,6 +2,7 @@
 #include "constants.h"
 
 
+
 namespace mb::cmd
 {
 	inline void Command::log() const noexcept {

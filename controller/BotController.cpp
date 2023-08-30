@@ -5,26 +5,31 @@
 #include "userdata.h"
 
 
+
 namespace mb
 {
 	BotController* BotController::singleton = nullptr;
+
 	std::unordered_map<std::string, cmd::Command*> BotController::inlcmds = {};
 	std::unordered_map<int64_t, std::string> BotController::prev_commands = {};
+
+
 
 	BotController::BotController(const std::string &TOKEN):
 		bot(TOKEN)
 	{
 	}
-	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept
-	{
+
+	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept {
 		if (!singleton) {
 			singleton = new BotController(TOKEN);
 		}
 		return singleton;
 	}
+
 	std::string BotController::bufferEntry(const int64_t &id) {
 		const auto &it = prev_commands.find(id);
-		return (it == prev_commands.end()) ? std::to_string(NONE) : it->second;
+		return (it == prev_commands.end()) ? std::to_string(NONE): it->second;
 	}
 
 	cmd::Command* BotController::getHandler(TgBot::Message::Ptr &message) {
@@ -54,10 +59,10 @@ namespace mb
 		return nullptr;
 	}
 
-	void BotController::initCommands(const std::vector<cmd::Command*>& commands)
-	{
+
+
+	void BotController::initCommands(const std::vector<cmd::Command*>& commands) {
 		for (const auto &cmd: commands) {
-			
 			const auto &type = cmd->type();
 			std::shared_ptr<cmd::Command> clone(cmd->clone());
 
@@ -112,9 +117,7 @@ namespace mb
 		});
 	}
 
-
-	void BotController::listen() noexcept
-	{
+	void BotController::listen() noexcept {
 		constexpr auto
 			bot_id       = "Bot id:\t",
 			listening    = "Listening...",

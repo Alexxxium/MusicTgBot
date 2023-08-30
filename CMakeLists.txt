@@ -37,6 +37,7 @@ set(SOURCES
 add_executable(MusicBot ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
     constants
     controller
     model/commands/include

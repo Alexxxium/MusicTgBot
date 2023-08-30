@@ -8,14 +8,14 @@
 namespace mb::cmd::mcr
 {
 	bool Start::execute(TgBot::Bot &bot) const {
-		static const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_WELCOME);
+		static std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_WELCOME);
 
 		bot.getApi().sendMessage(_message->chat->id, html, false, 0, init::initMacroKeyboard(), mrk::HTML);
 		return true;
 	}
 
 	bool Info::execute(TgBot::Bot &bot) const {
-		static const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_INFO);
+		static std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_INFO);
 
 		bot.getApi().sendMessage(_message->chat->id, html, false, 0, nullptr, mrk::HTML);
 		return true;
