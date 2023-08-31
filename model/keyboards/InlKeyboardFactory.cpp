@@ -37,31 +37,33 @@ namespace mb::cmd
 	}
 
 	TgBot::InlineKeyboardMarkup::Ptr InlKeyboardFactory::PlayListMenu(const int64_t &user_id, const std::string &playlist_name) {
-		constexpr int parts  = 2;
 		const auto &playlist = core::getPlayList(user_id, playlist_name);
 
-		TgBot::InlineKeyboardMarkup::Ptr keyboard   (new TgBot::InlineKeyboardMarkup);
-		TgBot::InlineKeyboardButton::Ptr addTracks  (new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr renamePList(new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr removePList(new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr uploadPList(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardMarkup::Ptr keyboard (new TgBot::InlineKeyboardMarkup);
+		TgBot::InlineKeyboardButton::Ptr addbtn   (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr renamebtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr removebtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr uploadbtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr returnbtn(new TgBot::InlineKeyboardButton);
 
-		addTracks->text   = btn::BTN_ADD;
-		renamePList->text = btn::BTN_RENAME;
-		removePList->text = btn::BTN_REMOVE;
-		uploadPList->text = btn::BTN_UPLOAD;
+		addbtn->text    = btn::BTN_ADD;
+		renamebtn->text = btn::BTN_RENAME;
+		removebtn->text = btn::BTN_REMOVE;
+		uploadbtn->text = btn::BTN_UPLOAD;
+		returnbtn->text = btn::BTN_RETURN;
 
-		addTracks->callbackData   = core::makeCallback(CBQ_ADD_TRACKS,      playlist_name);
-		renamePList->callbackData = core::makeCallback(CBQ_RENAME_PLAYLIST, playlist_name);
-		removePList->callbackData = core::makeCallback(CBQ_REMOVE_PLAYLIST, playlist_name);
-		uploadPList->callbackData = core::makeCallback(CBQ_UPLOAD_PLAYLIST, playlist_name);
+		addbtn->callbackData    = core::makeCallback(CBQ_ADD_TRACKS,      playlist_name);
+		renamebtn->callbackData = core::makeCallback(CBQ_RENAME_PLAYLIST, playlist_name);
+		removebtn->callbackData = core::makeCallback(CBQ_REMOVE_PLAYLIST, playlist_name);
+		uploadbtn->callbackData = core::makeCallback(CBQ_UPLOAD_PLAYLIST, playlist_name);
+		returnbtn->callbackData = core::makeCallback(CBQ_RETURN_TO_PLAYLISTS, playlist_name);
 
 		if (playlist.empty()) {
 			TgBot::InlineKeyboardButton::Ptr emptBtn(new TgBot::InlineKeyboardButton);
-			emptBtn->text             = btn::BTN_EMPTY_PLAYLIST;
-			emptBtn->callbackData     = core::makeCallback(NONE, NONE);
-			uploadPList->callbackData = core::makeCallback(NONE, NONE);
-			keyboard->inlineKeyboard  = { { emptBtn }, { renamePList, removePList }, { addTracks, uploadPList } };
+			emptBtn->text            = btn::BTN_EMPTY_PLAYLIST;
+			emptBtn->callbackData    = core::makeCallback(NONE, NONE);
+			uploadbtn->callbackData  = core::makeCallback(NONE, NONE);
+			keyboard->inlineKeyboard = { { emptBtn }, { renamebtn, removebtn }, { addbtn, uploadbtn }, { returnbtn } };
 			return keyboard;
 		}
 		for (const auto &track_name: playlist) {
@@ -72,8 +74,9 @@ namespace mb::cmd
 			keyboard->inlineKeyboard.push_back({ track });
 		}
 
-		keyboard->inlineKeyboard.push_back({ renamePList, removePList });
-		keyboard->inlineKeyboard.push_back({ addTracks, uploadPList });
+		keyboard->inlineKeyboard.push_back({ renamebtn, removebtn });
+		keyboard->inlineKeyboard.push_back({ addbtn, uploadbtn });
+		keyboard->inlineKeyboard.push_back({ returnbtn });
 		
 		return keyboard;
 	}
@@ -83,26 +86,28 @@ namespace mb::cmd
 			throw err::NOT_EXISTED_TRACK;
 		}
 
-		TgBot::InlineKeyboardMarkup::Ptr keyboard(new TgBot::InlineKeyboardMarkup);
-		TgBot::InlineKeyboardButton::Ptr track   (new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr rename  (new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr remove  (new TgBot::InlineKeyboardButton);
-		TgBot::InlineKeyboardButton::Ptr upload  (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardMarkup::Ptr keyboard (new TgBot::InlineKeyboardMarkup);
+		TgBot::InlineKeyboardButton::Ptr trackbtn (new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr renamebtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr removebtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr uploadbtn(new TgBot::InlineKeyboardButton);
+		TgBot::InlineKeyboardButton::Ptr returnbtn(new TgBot::InlineKeyboardButton);
 
-		rename->text = btn::BTN_RENAME;
-		remove->text = btn::BTN_REMOVE;
-		upload->text = btn::BTN_UPLOAD;
-		rename->callbackData = core::makeCallback(CBQ_RENAME_TRACK, track_locpth);
-		remove->callbackData = core::makeCallback(CBQ_REMOVE_TRACK, track_locpth);
-		upload->callbackData = core::makeCallback(CBQ_UPLOAD_TRACK, track_locpth);
-
-		track->text          = core::getTrack(user_id, track_locpth);
-		track->callbackData  = core::makeCallback(CBQ_UPLOAD_TRACK, track_locpth);
+		trackbtn->text  = core::getTrack(user_id, track_locpth);
+		renamebtn->text = btn::BTN_RENAME;
+		removebtn->text = btn::BTN_REMOVE;
+		uploadbtn->text = btn::BTN_UPLOAD;
+		returnbtn->text = btn::BTN_RETURN;
+		trackbtn->callbackData  = core::makeCallback(CBQ_UPLOAD_TRACK, track_locpth);
+		renamebtn->callbackData = core::makeCallback(CBQ_RENAME_TRACK, track_locpth);
+		removebtn->callbackData = core::makeCallback(CBQ_REMOVE_TRACK, track_locpth);
+		uploadbtn->callbackData = core::makeCallback(CBQ_UPLOAD_TRACK, track_locpth);
+		returnbtn->callbackData = core::makeCallback(CBQ_RETURN_TO_PLAYLIST, track_locpth);
 
 		keyboard->inlineKeyboard = {
-			{ track },
-			{ rename, remove },
-			{ upload }
+			{ trackbtn },
+			{ renamebtn, removebtn },
+			{ uploadbtn, returnbtn }
 		};
 
 		return keyboard;

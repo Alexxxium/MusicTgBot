@@ -78,6 +78,10 @@ namespace mb::cmd::inl
 		return true;
 	}
 
+	bool ReturnToPLists::execute(TgBot::Bot &bot) const {
+		return Execute<mcr::ShowPlayLists>::execute(NONE, _query->message, bot);
+	}
+
 
 
 	bool TrackPressed::execute(TgBot::Bot &bot) const {
@@ -117,6 +121,12 @@ namespace mb::cmd::inl
 	bool UploadTrackPressed::execute(TgBot::Bot &bot) const {
 		log();
 		return true;
+	}
+
+	bool ReturnToPList::execute(TgBot::Bot &bot) const {
+		return Execute<inl::PListPressed>::execute(CBQ_SHOW_PLAYLIST, _query->message, bot,
+			core::makeCallback(CBQ_SHOW_PLAYLIST, core::getPList(_query->message->chat->id, core::suffixCmd(_query->data)))
+		);
 	}
 
 

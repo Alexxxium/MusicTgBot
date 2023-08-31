@@ -73,7 +73,7 @@ namespace mb::core
 	}
 
 	bool isValidName(const std::wstring &file_or_dir) {
-		constexpr auto regexstr = L"^[a-zA-Z0-9_\ à-ÿÀ-ÿ]+$";
+		constexpr auto regexstr = L"^[a-zA-Zà-ÿÀ-ÿ¸¨0-9 `~!@#¹$;%^&()_\\[\\]+='-]+$";
 		std::wregex valid(regexstr);
 		return std::regex_search(file_or_dir, valid);
 	}
@@ -198,7 +198,7 @@ namespace mb::core
 			plist_existed   = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_EXISTED_NAME),
 			plist_uncorrect = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_UNCORRECT_NAME);
 
-		constexpr int8_t maxlen = 50, minlen = 1;
+		constexpr int8_t maxlen = 50, minlen = 3;
 		const std::string &path = makePath(id, name);
 		const auto &api = bot.getApi();
 		

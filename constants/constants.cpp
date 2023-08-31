@@ -24,10 +24,11 @@ namespace mb
 		btn::BTN_EMPTY_PLAYLIST        = u8"Плейлист пуст!",
 		btn::BTN_ADD_PLAYLIST          = u8"Добавить плейлист",
 
-		btn::BTN_REMOVE                = u8"Удалить",
 		btn::BTN_ADD                   = u8"Добавить",
+		btn::BTN_REMOVE                = u8"Удалить",
 		btn::BTN_RENAME                = u8"Переименовать",
-		btn::BTN_UPLOAD                = u8"Выгрузить";
+		btn::BTN_UPLOAD                = u8"Выгрузить",
+		btn::BTN_RETURN                = u8"Назад";
 
 
 
@@ -101,13 +102,14 @@ namespace mb
 		new inl::RenamePListPressed    (std::to_string(CBQ_RENAME_PLAYLIST)),
 		new inl::RemovePListPressed    (std::to_string(CBQ_REMOVE_PLAYLIST)),
 		new inl::UploadPListPressed    (std::to_string(CBQ_UPLOAD_PLAYLIST)),
-		
+		new inl::ReturnToPLists        (std::to_string(CBQ_RETURN_TO_PLAYLISTS)),
 		
 // Track inline commands:
 		new inl::TrackPressed          (std::to_string(CBQ_SHOW_TRACK)),
 		new inl::AddTracksPressed      (std::to_string(CBQ_ADD_TRACKS)),
 		new inl::RenameTrackPressed    (std::to_string(CBQ_RENAME_TRACK)),
 		new inl::RemoveTrackPressed    (std::to_string(CBQ_REMOVE_TRACK)),
+		new inl::ReturnToPList         (std::to_string(CBQ_RETURN_TO_PLAYLIST)),
 	
 // Dialog keyboard commands:
 		new inl::RemovePListPressed_YN (std::to_string(CBQ_REMOVE_PLAYLIST_YN)),

@@ -60,6 +60,14 @@ namespace mb::cmd::inl
 		bool execute(TgBot::Bot &bot) const override;
 	};
 
+	class ReturnToPLists: public InlineCommand {
+	public:
+		explicit ReturnToPLists(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new ReturnToPLists(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
 
 
 	class TrackPressed: public InlineCommand
@@ -92,6 +100,14 @@ namespace mb::cmd::inl
 	public:
 		explicit UploadTrackPressed(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()) : InlineCommand(name, message) {}
 		Command* clone() const noexcept override { return new UploadTrackPressed(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+	class ReturnToPList: public InlineCommand {
+	public:
+		explicit ReturnToPList(const std::string &name, const TgBot::CallbackQuery::Ptr &message = TgBot::CallbackQuery::Ptr()): InlineCommand(name, message) {}
+		Command* clone() const noexcept override { return new ReturnToPList(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
