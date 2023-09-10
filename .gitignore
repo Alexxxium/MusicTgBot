@@ -1,4 +1,6 @@
-/.vs
-/out
-/test data
-*.json
+/.vs 
+/out 
+/test data 
+/server/.vs 
+/server/out 
+*.json 
