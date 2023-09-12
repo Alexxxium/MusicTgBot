@@ -7,8 +7,10 @@ set(SOURCES
 	main.cpp 
 	source/TaskQueue.cpp 
 	source/ServerQueues.cpp 
+	source/tempconstants.cpp 
+	source/ServerOperations.cpp 
 )
 
 add_executable(Server ${SOURCES})
 
-target_include_directories(Server PRIVATE include)
+target_include_directories(Server PRIVATE "include" "../constants")

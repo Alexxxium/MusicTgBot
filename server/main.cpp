@@ -1,60 +1,57 @@
 #include <iostream>
-#include "TaskQueue.h"
+#include "ServerQueues.h"
+#include "ServerOperations.h"
 
 
-int g = 0;
+void f(int ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); std::cout << std::this_thread::get_id() << " ended\n"; };
 
-void sleep(uint64_t ms) {
-	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
+void teatLocalQueue() {
+	srv::LocalQueueWrapper wrapp(3);
 
-void st() {
-	std::cout << "task:\t" << g << '\n';
+
+
+	wrapp.addToQueue(0, []() { f(3000); });
+	wrapp.addToQueue(0, []() { f(1000); });
+	wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+	//wrapp.addToQueue(0, []() { f(1000); });
+
+	wrapp.addToQueue(1, []() { f(3000); });
+	wrapp.addToQueue(1, []() { f(1000); });
+	wrapp.addToQueue(1, []() { f(1000); });
+	//wrapp.addToQueue(1, []() { f(1000); });
+	//wrapp.addToQueue(1, []() { f(1000); });
+
+	wrapp.addToQueue(2, []() { f(3000); });
+	wrapp.addToQueue(2, []() { f(1000); });
+	wrapp.addToQueue(2, []() { f(1000); });
+
+	std::cout << "\nLOW\n";
+
+	wrapp.addToFreeQueue({
+		[]() { f(1000); std::cout << "FREEEEEE1\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE2\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE3\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE4\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE5\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE6\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE7\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE8\n"; },
+		[]() { f(1000); std::cout << "FREEEEEE9\n"; }
+		});
+
+	std::cout << wrapp.getFreeQueue() << '\n';
 }
 
 
 
 int main()
 {
-	algs::TaskQueue queue;
-
-	// task
-	const auto& s = [&]() { ++g; std::this_thread::sleep_for(std::chrono::milliseconds(100)); };
-
-	// 50 tasks
-	queue.addTasks({
-		s,s,s,s,s,s,s,s,s,s,
-		s,s,s,s,s,s,s,s,s,s,
-		s,s,s,s,s,s,s,s,s,s,
-		s,s,s,s,s,s,s,s,s,s,
-		s,s,s,s,s,s,s,s,s,s
-	});
-
-	// tasks count +- 1
-
-	sleep(1'000);      // ~10 tasks
-	st();
-	queue.freeze();
-
-	sleep(500);        // ~10 tasks (5 ignore)
-	st();
-	queue.unfreeze();
 	
-	sleep(1'000);      // ~20 tasks
-	st();
-	queue.freeze();
-
-	sleep(500);        // ~25 tasks (5 ignore)
-	st();
-	queue.crash();
-
-	sleep(500);        // ~30 tasks (5 ignore)
-	st();
-	queue.run();
-
-	sleep(1'000);      // ~30 tasks
-	st();
-
-	queue.wait();
-	st();
 }

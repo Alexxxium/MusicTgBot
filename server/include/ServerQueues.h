@@ -1,21 +1,54 @@
-#include <unordered_map>
+#pragma once
 #include "TaskQueue.h"
+
 
 
 namespace srv
 {
-	class ServerQueues
-	{
+	/// Create N algs::TaskQueue and monitors uniformity in queues
+	/// Recommended to use equivalent time tasks (only downloads or only uploads)
+	class LocalQueueWrapper {
 	private:
-		static ServerQueues *singleton;
-
-		std::unordered_map<int, algs::TaskQueue*> taskstable;
-
-		explicit ServerQueues(const std::initializer_list<int> &idlist);
+		std::vector<std::unique_ptr<algs::TaskQueue>> queues;
 
 	public:
-		static ServerQueues* getInstance(const std::initializer_list<int> &idlist);
+		LocalQueueWrapper() = delete;
+		~LocalQueueWrapper() = default;
+		LocalQueueWrapper(LocalQueueWrapper&&) = delete;
+		LocalQueueWrapper(const LocalQueueWrapper&) = delete;
+		LocalQueueWrapper& operator=(LocalQueueWrapper&&) = delete;
+		LocalQueueWrapper& operator=(const LocalQueueWrapper&) = delete;
 
-		void addTask(int key, const std::function<void()> &task);
+		explicit LocalQueueWrapper(const int &len);
+
+		int getFreeQueue() const noexcept;
+
+		void addToQueue(const int &index, const std::function<void()> &handler);
+		void addToQueue(const int &index, const std::initializer_list<std::function<void()>> &handlers);
+
+		void addToFreeQueue(const std::function<void()> &handler);
+		void addToFreeQueue(const std::initializer_list<std::function<void()>> &handlers);
+	};
+
+
+	
+	/// Tasks distributor
+	class ServerQueues {
+	private:
+		static ServerQueues *singleton;
+		std::unordered_map<std::string, std::unique_ptr<LocalQueueWrapper>> taskports;
+
+		explicit ServerQueues(const std::unordered_map<std::string, int> &cmdlet);
+		std::function<void()> getHandler(const std::string &servcmd);
+
+	public:
+		ServerQueues() = delete;
+		~ServerQueues() = default;
+		ServerQueues(ServerQueues&&) = delete;
+		ServerQueues(const ServerQueues&) = delete;
+		ServerQueues& operator=(ServerQueues&&) = delete;
+		ServerQueues& operator=(const ServerQueues&) = delete;
+
+		static ServerQueues* getInstanse(const std::unordered_map<std::string, int> &cmdlet) noexcept;
 	};
 }
