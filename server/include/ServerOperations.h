@@ -1,32 +1,28 @@
 #pragma once
 #include <functional>
+#include <vector>
+#include <string>
 
 
 
 namespace srv
 {
 	class Operation {
-	protected:
-		std::string name_key;
-
 	public:
-		std::string name() const noexcept;
-
 		virtual ~Operation() = default;
-		virtual void execute(const std::string &args) const;
-		virtual std::function<void()> executor(const std::string &args) const;
+		virtual void execute(const std::vector<std::string> &args) const = 0;
+		virtual std::function<void()> executor(const std::vector<std::string> &args) const = 0;
 	};
 
 
 	class SendAudio: public Operation {
 	public:
-		SendAudio(const std::string &cmd) { 
-			name_key = cmd; 
-		}
-		std::function<void()> executor(const std::string &args) const override {
+		SendAudio() = default;
+
+		std::function<void()> executor(const std::vector<std::string> &args) const override {
 			return [this, args]() { execute(args); };
 		};
 
-		void execute(const std::string &args) const override;
+		void execute(const std::vector<std::string> &args) const override;
 	};
 }

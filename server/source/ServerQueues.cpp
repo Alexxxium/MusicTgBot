@@ -1,5 +1,6 @@
 #include "ServerQueues.h"
-#include "tempconstants.h"
+#include "ServerConstants.h"
+#include <sstream>
 #include <map>
 
 
@@ -8,7 +9,7 @@ namespace srv
 {
 	LocalQueueWrapper::LocalQueueWrapper(const int &len) {
 		if (len <= 0) {
-			throw 1;
+			throw err::INVALID_QUEUE_SIZE;
 		}
 		queues.reserve(len);
 
@@ -37,14 +38,14 @@ namespace srv
 
 	void LocalQueueWrapper::addToQueue(const int &index, const std::function<void()> &handler) {
 		if (index < 0 && index >= queues.size()) {
-			throw 1;
+			throw err::INVALID_INDEX;
 		}
 		queues[index]->addTask(handler);
 	}
 
 	void LocalQueueWrapper::addToQueue(const int &index, const std::initializer_list<std::function<void()>> &handlers) {
 		if (index < 0 && index >= queues.size()) {
-			throw 1;
+			throw err::INVALID_INDEX;
 		}
 		queues[index]->addTasks(handlers);
 	}
@@ -56,7 +57,7 @@ namespace srv
 		int port = getFreeQueue();
 
 		if (port < 0) {
-			throw 1;
+			throw err::INVALID_INDEX;
 		}
 		queues[port]->addTask(handler);
 	}
@@ -64,7 +65,7 @@ namespace srv
 	// O(N * log(N) + K), K - handlers count
 	void LocalQueueWrapper::addToFreeQueue(const std::initializer_list<std::function<void()>> &handlers) {
 		if (queues.size() == 0) {
-			throw 1;
+			throw err::INVALID_QUEUE_SIZE;
 		}
 		else if (queues.size() == 1) {
 			queues[0]->addTasks(handlers);
@@ -105,7 +106,9 @@ namespace srv
 
 
 
+
 	ServerQueues* ServerQueues::singleton = nullptr;
+
 
 	ServerQueues::ServerQueues(const std::unordered_map<std::string, int> &cmdlet) {
 		for (const auto &[cmd, count]: cmdlet) {
@@ -120,7 +123,26 @@ namespace srv
 		return singleton;
 	}
 
-	std::function<void()> ServerQueues::getHandler(const std::string &servcmd) {
-		return std::function<void()>();
+	void ServerQueues::assept(const std::string &cmd) {
+		std::stringstream stream(cmd);
+		std::vector<std::string> args;
+		std::string name;
+
+		stream >> name;
+
+		while (stream) {
+			std::string buff;
+			stream >> buff;
+			args.push_back(std::move(buff));
+		}
+
+		const auto &port = taskports.find(name);
+		const auto &handl = init::HANDLERS.find(name);
+
+		if (port == taskports.end() || handl == init::HANDLERS.end()) { 
+			throw err::UNKOWN_CMD;
+		}
+
+		port->second->addToFreeQueue(handl->second->executor(args));
 	}
 }

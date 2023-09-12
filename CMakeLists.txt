@@ -21,7 +21,7 @@ endif()
 
 set(TgBot "D:/Libs/vcpkg/installed/x64-windows/lib/TgBot.lib")
 
-set(SOURCES
+set(SOURCE
     main.cpp 
     controller/BotController.cpp 
     constants/constants.cpp 
@@ -34,7 +34,9 @@ set(SOURCES
     core/source/userdata.cpp
 )
 
-add_executable(MusicBot ${SOURCES})
+add_executable(MusicBot ${SOURCE})
+
+add_subdirectory("server")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}

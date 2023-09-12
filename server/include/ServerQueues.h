@@ -21,6 +21,7 @@ namespace srv
 
 		explicit LocalQueueWrapper(const int &len);
 
+		// Returns the smallest queue by length 
 		int getFreeQueue() const noexcept;
 
 		void addToQueue(const int &index, const std::function<void()> &handler);
@@ -36,10 +37,9 @@ namespace srv
 	class ServerQueues {
 	private:
 		static ServerQueues *singleton;
-		std::unordered_map<std::string, std::unique_ptr<LocalQueueWrapper>> taskports;
 
+		std::unordered_map<std::string, std::unique_ptr<LocalQueueWrapper>> taskports;
 		explicit ServerQueues(const std::unordered_map<std::string, int> &cmdlet);
-		std::function<void()> getHandler(const std::string &servcmd);
 
 	public:
 		ServerQueues() = delete;
@@ -49,6 +49,10 @@ namespace srv
 		ServerQueues& operator=(ServerQueues&&) = delete;
 		ServerQueues& operator=(const ServerQueues&) = delete;
 
+
 		static ServerQueues* getInstanse(const std::unordered_map<std::string, int> &cmdlet) noexcept;
+
+		// Assept string-command and assigns a handlers
+		void assept(const std::string &cmd);
 	};
 }
