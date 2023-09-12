@@ -37,14 +37,14 @@ namespace srv
 
 
 	void LocalQueueWrapper::addToQueue(const int &index, const std::function<void()> &handler) {
-		if (index < 0 && index >= queues.size()) {
+		if (index < 0 || index >= queues.size()) {
 			throw err::INVALID_INDEX;
 		}
 		queues[index]->addTask(handler);
 	}
 
 	void LocalQueueWrapper::addToQueue(const int &index, const std::initializer_list<std::function<void()>> &handlers) {
-		if (index < 0 && index >= queues.size()) {
+		if (index < 0 || index >= queues.size()) {
 			throw err::INVALID_INDEX;
 		}
 		queues[index]->addTasks(handlers);
