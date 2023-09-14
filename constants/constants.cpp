@@ -64,8 +64,8 @@ namespace mb
 		pth::HTML_WELCOME              = u8"welcome.html",
 		pth::HTML_INFO                 = u8"info.html",
 
-		pth::USER_DATA_DIR             = u8"C:/Users/alexz/C++ prog/MusicTgBot/test data/",
-		pth::MESSAGE_DIR               = u8"C:/Users/alexz/C++ prog/MusicTgBot/constants/messages/",
+		pth::USER_DATA_DIR             = u8"D:/Prog/C++ prog/MusicTgBot/test data/",
+		pth::MESSAGE_DIR               = u8"D:/Prog/C++ prog/MusicTgBot/constants/messages/",
 
 		pth::HTML_LITTLE_NAME          = u8"LittleName.html",
 		pth::HTML_LARGE_NAME           = u8"LargeName.html",

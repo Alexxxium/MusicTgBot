@@ -43,7 +43,7 @@ namespace srv
 
 	public:
 		ServerQueues() = delete;
-		~ServerQueues() = default;
+		~ServerQueues() = delete;
 		ServerQueues(ServerQueues&&) = delete;
 		ServerQueues(const ServerQueues&) = delete;
 		ServerQueues& operator=(ServerQueues&&) = delete;

@@ -2,12 +2,9 @@ set(SERVER
 	main.cpp 
 	source/TaskQueue.cpp 
 	source/ServerQueues.cpp 
-	"source/ServerConstants.cpp" 
+	source/ServerConstants.cpp 
 	source/ServerOperations.cpp 
-	include/TaskQueue.h 
-	include/ServerQueues.h 
-	"include/ServerConstants.h" 
-	include/ServerOperations.h 
+	source/ServerData.cpp 
 )
 
 add_executable(Server ${SERVER})

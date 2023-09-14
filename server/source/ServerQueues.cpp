@@ -1,6 +1,7 @@
 #include "ServerQueues.h"
 #include "ServerConstants.h"
 #include <sstream>
+#include <iomanip>
 #include <map>
 
 
@@ -19,7 +20,7 @@ namespace srv
 	}
 
 	int LocalQueueWrapper::getFreeQueue() const noexcept {
-		int min = INT_MAX;
+		size_t min = SIZE_MAX;
 		int res = -1;
 
 		for (int i = 0; i < queues.size(); ++i) {
@@ -126,14 +127,13 @@ namespace srv
 	void ServerQueues::assept(const std::string &cmd) {
 		std::stringstream stream(cmd);
 		std::vector<std::string> args;
-		std::string name;
+		std::string name, buff;
 
-		stream >> name;
+		stream >> std::quoted(name);
 
-		while (stream) {
-			std::string buff;
-			stream >> buff;
+		while (stream >> std::quoted(buff)) {
 			args.push_back(std::move(buff));
+			buff.clear();
 		}
 
 		const auto &port = taskports.find(name);
