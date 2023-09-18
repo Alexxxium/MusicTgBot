@@ -69,12 +69,25 @@ namespace mb::cmd::inl
 	}
 
 	bool UploadPListPressed::execute(TgBot::Bot &bot) const {
-		log();
+		constexpr auto cmd = "upload_group";
+		const int64_t &id = _query->message->chat->id;
+
+		auto *ctrl = BotController::getInstanse();
+		if (ctrl == nullptr) {
+			throw err::NULL_INSTANSE;
+		}
+
+		std::string args = core::makeServerCmd(cmd, { std::to_string(id), core::suffixCmd(_query->data) });
+		std::string reply = ctrl->forward(args);
+
+		bot.getApi().sendMessage(id, reply, false, 0, nullptr, mrk::HTML);
 		return true;
 	}
 
 	bool AddTracksPressed::execute(TgBot::Bot &bot) const {
-		log();
+		static std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_ADDTRACKS);
+
+		bot.getApi().sendMessage(_query->message->chat->id, text, false, 0, nullptr, mrk::HTML);
 		return true;
 	}
 
@@ -119,7 +132,18 @@ namespace mb::cmd::inl
 	}
 
 	bool UploadTrackPressed::execute(TgBot::Bot &bot) const {
-		log();
+		constexpr auto cmd = "upload";
+		const int64_t &id = _query->message->chat->id;
+
+		auto *ctrl = BotController::getInstanse();
+		if (ctrl == nullptr) {
+			throw err::NULL_INSTANSE;
+		}
+
+		std::string args = core::makeServerCmd(cmd, { std::to_string(id), core::suffixCmd(_query->data) });
+		std::string reply = ctrl->forward(args);
+
+		bot.getApi().sendMessage(id, reply, false, 0, nullptr, mrk::HTML);
 		return true;
 	}
 

@@ -23,8 +23,16 @@ namespace mb::cmd::any
 
 	class RenameTrack: public AnyCommand{
 	public:
-		explicit RenameTrack(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()) : AnyCommand(name, message) {}
+		explicit RenameTrack(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): AnyCommand(name, message) {}
 		Command* clone() const noexcept override { return new RenameTrack(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
+
+	class DownloadTrack: public AnyCommand {
+	public:
+		explicit DownloadTrack(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): AnyCommand(name, message) {}
+		Command* clone() const noexcept override { return new DownloadTrack(*this); }
 
 		bool execute(TgBot::Bot &bot) const override;
 	};

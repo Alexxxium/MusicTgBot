@@ -68,7 +68,6 @@ namespace mb
 		static const std::vector<cmd::Command*>       CMDLET;
 		static const std::unordered_set<std::string>  SUPEXT;
 		static TgBot::ReplyKeyboardMarkup::Ptr        initMacroKeyboard();
-		
 	};
 
 
@@ -113,9 +112,20 @@ namespace mb
 			CANT_RENAME_TRACK,
 			UNKNOWN_SUBDIR,
 			UNCORREKT_PATH,
-			
+
 			NULL_CMD_PTR,
-			UNKNOWN_CMD;
+			UNKNOWN_CMD,
+
+			INIT_CLIENT_FAILED,
+			INIT_ADDRINFO_FAILED,
+			INIT_SOCKET_FAILED,
+			INIT_CONNECTION_FAILED,
+			SENDING_FAILED,
+			RECEVING_FAILED,
+			CLOSED_CONNECTION,
+			INVALID_BUFFER_SIZE,
+			
+			NULL_INSTANSE;
 
 		static const DataError
 			OLD_DATA,
@@ -150,11 +160,13 @@ namespace mb
 			HTML_RENAME_MESSAGE,
 			HTML_HEADER_MESSAGE,
 			HTML_MAX_COUNT_MESSAGE,
+			HTML_ADDTRACKS,
 
 // Other:
 			HTML_PLISTS_HEADER,
 			HTML_CREATED_PLIST,
-			HTML_OLD_DATA;
+			HTML_OLD_DATA,
+			HTML_WAIT_SERVER_RESP;
 	};
 
 

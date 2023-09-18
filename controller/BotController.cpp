@@ -20,11 +20,19 @@ namespace mb
 	{
 	}
 
+	BotController* BotController::getInstanse() noexcept {
+		return singleton;
+	}
+
 	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept {
 		if (!singleton) {
 			singleton = new BotController(TOKEN);
 		}
 		return singleton;
+	}
+
+	std::string BotController::forward(const std::string &srvcmd) {
+		return client.redirect(srvcmd);
 	}
 
 	std::string BotController::bufferEntry(const int64_t &id) {
@@ -54,6 +62,9 @@ namespace mb
 		}
 		else if (type == CBQ_RENAME_TRACK) {
 			return new cmd::any::RenameTrack(cback);
+		}
+		else if (type == CBQ_ADD_TRACKS) {
+			return new cmd::any::DownloadTrack(cback);
 		}
 
 		return nullptr;
@@ -103,6 +114,7 @@ namespace mb
 				});
 			}
 		});
+
 
 		/// Validator of user input/response with delegate previos bot`s message state (was a fail input)
 		bot.getEvents().onAnyMessage([&](TgBot::Message::Ptr &message) { 

@@ -30,8 +30,11 @@ set(SOURCE
     model/commands/source/MacroCommands.cpp 
     model/commands/source/Command.cpp 
     model/keyboards/InlKeyboardFactory.cpp 
-    core/source/validators.cpp
-    core/source/userdata.cpp
+    core/source/validators.cpp 
+    core/source/userdata.cpp 
+    client/Client.cpp 
+    server/patterns/source/TaskQueue.cpp 
+    server/patterns/source/TaskQueueWrapp.cpp 
 )
 
 add_executable(MusicBot ${SOURCE})
@@ -45,6 +48,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     model/commands/include
     model/keyboards 
     core/include 
+    client 
+    server/patterns/include 
 )
 
 target_link_libraries(MusicBot ${TgBot} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})

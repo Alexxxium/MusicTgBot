@@ -49,7 +49,18 @@ namespace mb
 		err::UNCORREKT_PATH            ("Uncorrect path!"),
 
 		err::UNKNOWN_CMD               ("Unknown Command!"),
-		err::NULL_CMD_PTR              ("Command pointer is NULL!");
+		err::NULL_CMD_PTR              ("Command pointer is NULL!"),
+		
+		err::INIT_CLIENT_FAILED        ("Can't initializing client!"),
+		err::INIT_ADDRINFO_FAILED      ("Can't initializing ADDRINFO struct!"),
+		err::INIT_SOCKET_FAILED        ("Can`t initializing socket!"),
+		err::INIT_CONNECTION_FAILED    ("Can`t initializing connection!"),
+		err::SENDING_FAILED            ("Error sending message to server!"),
+		err::RECEVING_FAILED           ("Error receving message from server!"),
+		err::CLOSED_CONNECTION         ("Closed connection to server!"),
+		err::INVALID_BUFFER_SIZE       ("Invalid client's buffer lenght!"),
+		
+		err::NULL_INSTANSE             ("This instanse is`t created!");
 
 	const DataError
 		err::OLD_DATA                  ("Pressed old button reffering to old data!"),
@@ -75,13 +86,15 @@ namespace mb
 		pth::HTML_RENAME_MESSAGE       = u8"RenameMessage.html",
 		pth::HTML_HEADER_MESSAGE       = u8"Header.html",
 		pth::HTML_MAX_COUNT_MESSAGE    = u8"MaxCount.html",
+		pth::HTML_ADDTRACKS            = u8"AddTracks.html",
 
 		pth::SUB_DIR_TO_PLIST          = u8"playlist/",
 		pth::SUB_DIR_TO_TRACK          = u8"track/",
 
 		pth::HTML_PLISTS_HEADER        = u8"PlistsHeader.html",
 		pth::HTML_CREATED_PLIST        = u8"CreatedPlist.html",
-		pth::HTML_OLD_DATA             = u8"OldData.html";
+		pth::HTML_OLD_DATA             = u8"OldData.html",
+		pth::HTML_WAIT_SERVER_RESP     = u8"WaitServerResponse.html";
 
 
 
@@ -109,6 +122,7 @@ namespace mb
 		new inl::AddTracksPressed      (std::to_string(CBQ_ADD_TRACKS)),
 		new inl::RenameTrackPressed    (std::to_string(CBQ_RENAME_TRACK)),
 		new inl::RemoveTrackPressed    (std::to_string(CBQ_REMOVE_TRACK)),
+		new inl::UploadTrackPressed    (std::to_string(CBQ_UPLOAD_TRACK)),
 		new inl::ReturnToPList         (std::to_string(CBQ_RETURN_TO_PLAYLIST)),
 	
 // Dialog keyboard commands:

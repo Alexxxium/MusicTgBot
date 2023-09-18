@@ -1,5 +1,6 @@
 #pragma once
 #include "Command.h"
+#include "Client.h"
 
 
 
@@ -10,6 +11,7 @@ namespace mb
 	{
 	private:
 		TgBot::Bot bot;
+		Client client;
 		static BotController *singleton;
 
 		static std::unordered_map<std::string, cmd::Command*> inlcmds;
@@ -25,8 +27,14 @@ namespace mb
 		BotController& operator=(BotController&&) = delete;
 		BotController& operator=(const BotController) = delete;
 
+		// Return static pointer to instanse. WARNING: If instanse was`t created before then return nullptr
+		static BotController* getInstanse() noexcept;
+
+		// Return instanse of BotController
 		static BotController* getInstanse(const std::string &TOKEN) noexcept;
 
+		// Forward command to server and return HTML response to send user
+		std::string forward(const std::string &srvcmd);
 
 		// Return last good executed command: str("type" "Callback_type data")
 		static std::string bufferEntry(const int64_t &id);

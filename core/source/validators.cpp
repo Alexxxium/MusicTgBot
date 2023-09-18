@@ -184,6 +184,16 @@ namespace mb::core
 		}
 	}
 
+	std::string makeServerCmd(const std::string &cmd, const std::vector<std::string> &args) {
+		constexpr auto wr = "\"", sep = " ";
+		std::string res = wr + cmd + wr + sep;
+
+		for (const auto &arg: args) {
+			res += wr + arg + wr + sep;
+		}
+		return res;
+	}
+
 
 
 	bool isValidPath(const std::string &name, const::std::string &subdir, const int64_t &id, TgBot::Bot &bot) {

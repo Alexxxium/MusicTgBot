@@ -9,7 +9,6 @@ namespace mb::core
 	std::string prefixCmd(const std::string &cmd_name);
 	std::string suffixCmd(const std::string &cmd_name);
 	
-	
 	std::string makeCallback(const std::string &prefix, const std::string &suffix);
 	std::string makeCallback(const int &prefix, const std::string &suffix);
 	std::string makeCallback(const std::string &prefix, const int &suffix);
@@ -29,6 +28,8 @@ namespace mb::core
 	std::string getPList(const uint64_t &id, const std::string &locpth);
 	std::string getTrack(const uint64_t &id, const std::string &locpth);
 	std::string getExten(const uint64_t &id, const std::string &locpth);
+	std::string makeServerCmd(const std::string &cmd, const std::vector<std::string> &args);
+
 
 
 	bool inCmdlet(const std::string &cmd_name);

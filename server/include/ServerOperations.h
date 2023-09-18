@@ -21,7 +21,7 @@ namespace srv
 		~SendAudio() = default;
 
 		std::function<void()> executor(const std::vector<std::string> &args) const override {
-			return [=]() { execute(args); };
+			return [this, args]() { execute(args); };
 		};
 
 		void execute(const std::vector<std::string> &args) const override;
@@ -33,7 +33,7 @@ namespace srv
 		~SendAudioGroup() = default;
 
 		std::function<void()> executor(const std::vector<std::string> &args) const override {
-			return [=]() { execute(args); };
+			return [this, args]() { execute(args); };
 		}
 
 		void execute(const std::vector<std::string> &args) const override;
