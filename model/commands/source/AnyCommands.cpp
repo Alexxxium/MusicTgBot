@@ -80,7 +80,7 @@ namespace mb::cmd::any
 
 
 
-	void asyncDownloader(int64_t id, int entry, int ms) {
+	void asyncDownloader(int64_t id, const std::string &plist, int entry, int ms) {
 		constexpr auto srvcmd = "download", sep = "\n";
 		constexpr int maxlen = 5;
 
@@ -106,21 +106,17 @@ namespace mb::cmd::any
 
 				std::string text = waitSendind;
 				for (const auto &fname: buffer) {
-					//std::stringstream stream(fname);
-					//std::string temp;
-					//stream >> std::quoted(temp);
-					text += sep + fname;
+					text += sep + fname.substr(0, fname.find("|"));
 				}
 				asyncBot.getApi().sendMessage(id, text, false, 0, nullptr, mrk::HTML);
 
 				auto ctrl = BotController::getInstanse();
 
 				if (ctrl != nullptr) {
-					buffer.push_front(std::to_string(id));
 					std::vector<std::string> args(buffer.begin(), buffer.end());
+					const auto &config = core::makeServerCmd(core::makeServerCmd(srvcmd, { std::to_string(id), plist }), args);
 
-					auto &s = core::makeServerCmd(srvcmd, args);
-					std::string response = ctrl->forward(core::makeServerCmd(srvcmd, args));
+					std::string response = ctrl->forward(config);
 					asyncBot.getApi().sendMessage(id, response, false, 0, nullptr, mrk::HTML);
 				}
 
@@ -156,7 +152,8 @@ namespace mb::cmd::any
 			std::lock_guard<std::mutex> lock(mutex);
 			if (buff.size() == 0) {
 				int entry = buff.size();
-				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, entry, 1000); });
+				std::string plist = _name;
+				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, plist, entry, 500); });
 			}
 			std::string srvarg = core::makeServerCmd(audio->fileName, { file->filePath });
 			buff.push_back(srvarg);
