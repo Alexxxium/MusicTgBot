@@ -26,4 +26,17 @@ namespace srv
 
 		return res;
 	}
+
+	std::vector<std::string> split(std::string &&parsestr, const std::string &sep) {
+		size_t pos = 0;
+		std::vector<std::string> res;
+
+		while ((pos = parsestr.find(sep)) != std::string::npos) {
+			res.push_back(parsestr.substr(0, pos));
+			parsestr.erase(0, pos + sep.length());
+		}
+		res.push_back(parsestr);
+
+		return res;
+	}
 }

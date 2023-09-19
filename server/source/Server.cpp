@@ -73,7 +73,7 @@ namespace srv
 			rescode = recv(client_socket, recvbuff, sizeof(recvbuff), 0);
 			if (rescode > 0) {
 				std::cout << "Recv. data:\t" << recvbuff << std::endl;
-				std::string response = entryToQueue(recvbuff);
+				std::string response = entryToQueue(std::move(recvbuff));
 				rescode = send(client_socket, response.c_str(), response.size(), 0);
 				if (rescode == SOCKET_ERROR) {
 					throw err::RESPONSE_FAILED;
@@ -95,7 +95,7 @@ namespace srv
 		WSACleanup();
 	}
 
-	std::string Server::entryToQueue(const std::string &srvcmd) noexcept {
+	std::string Server::entryToQueue(std::string &&srvcmd) noexcept {
 		constexpr auto
 			unknown_err = u8"Неизвестная ошибка!",
 			good_bit    = u8"запрос принят и отправлен в очередь!",
@@ -104,7 +104,7 @@ namespace srv
 			
 
 		try {
-			queues->accept(srvcmd);
+			queues->accept(std::move(srvcmd));
 		}
 		catch (const std::exception &exc) {
 			return (std::string) ib_ + exc.what() + _i;
@@ -113,6 +113,6 @@ namespace srv
 			return (std::string) ib_ + unknown_err + _i;
 		}
 
-		return (std::string)ib_ + good_bit + _i;
+		return (std::string) ib_ + good_bit + _i;
 	}
 }

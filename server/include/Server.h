@@ -37,6 +37,6 @@ namespace srv
 		void listening();
 		void close();
 
-		std::string entryToQueue(const std::string &srvcmd) noexcept;
+		std::string entryToQueue(std::string &&srvcmd) noexcept;
 	};
 }

@@ -22,6 +22,8 @@ namespace srv {
 			throw err::INVALID_NOTATION;
 		}
 
+		//for (auto &i : args) std::cout << i << '\n';
+
 		int64_t id = std::stoll(args[start_name]);
 		const std::string &target_dir = pth::USER_DATA_DIR + args[start_name] + sl;
 
@@ -59,6 +61,17 @@ namespace srv {
 					BOT.getApi().sendAudio(id, audio);
 				}
 			}
+		}
+	}
+
+
+	void DownloadAudioGroup::execute(const std::vector<std::string> &args) const {
+		std::lock_guard<std::mutex> lock(mutex);
+		std::cout << "ID:\n" <<
+			args[0] << "\n" <<
+			"Args:\n";
+		for (int i = 1; i < args.size(); ++i) {
+			std::cout << args[i] << '\n';
 		}
 	}
 }

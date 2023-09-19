@@ -94,7 +94,8 @@ namespace mb
 		pth::HTML_PLISTS_HEADER        = u8"PlistsHeader.html",
 		pth::HTML_CREATED_PLIST        = u8"CreatedPlist.html",
 		pth::HTML_OLD_DATA             = u8"OldData.html",
-		pth::HTML_WAIT_SERVER_RESP     = u8"WaitServerResponse.html";
+		pth::HTML_WAIT_SERVER_RESP     = u8"WaitServerResponse.html",
+		pth::HTML_WAIT_SEND_TO_SRV     = u8"WaitSendingToServer.html";
 
 
 

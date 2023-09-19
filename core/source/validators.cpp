@@ -185,11 +185,11 @@ namespace mb::core
 	}
 
 	std::string makeServerCmd(const std::string &cmd, const std::vector<std::string> &args) {
-		constexpr auto wr = "\"", sep = " ";
-		std::string res = wr + cmd + wr + sep;
+		constexpr auto  sep = "|";
+		std::string res = cmd;
 
 		for (const auto &arg: args) {
-			res += wr + arg + wr + sep;
+			res += sep + arg;
 		}
 		return res;
 	}

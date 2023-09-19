@@ -26,6 +26,6 @@ namespace srv
 		static ServerQueues* getInstanse(const std::unordered_map<std::string, int> &cmdlet) noexcept;
 
 		// Assept string-command and assigns a handlers
-		void accept(const std::string &cmd);
+		void accept(std::string &&cmd);
 	};
 }

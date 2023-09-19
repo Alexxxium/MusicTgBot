@@ -38,4 +38,16 @@ namespace srv
 
 		void execute(const std::vector<std::string> &args) const override;
 	};
+
+	class DownloadAudioGroup: public Operation {
+	public:
+		DownloadAudioGroup() = default;
+		~DownloadAudioGroup() = default;
+
+		std::function<void()> executor(const std::vector<std::string> &args) const override {
+			return [this, args]() { execute(args); };
+		};
+
+		void execute(const std::vector<std::string> &args) const override;
+	};
 }

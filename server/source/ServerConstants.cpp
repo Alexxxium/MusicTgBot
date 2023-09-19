@@ -21,8 +21,9 @@ namespace srv
 
 	const std::unordered_map<std::string, Operation*> init::HANDLERS
 	{
-		{ "upload"      , new SendAudio      },
-		{ "upload_group", new SendAudioGroup }
+		{ "upload"      , new SendAudio          },
+		{ "upload_group", new SendAudioGroup     },
+		{ "download"    , new DownloadAudioGroup }
 	};
 
 

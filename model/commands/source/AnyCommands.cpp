@@ -13,13 +13,16 @@
 
 static std::mutex mutex;
 
+static TgBot::Bot asyncBot(mb::init::TOKEN);
+
 // 20 queues to async tasks
 static algs::TaskQueueWrapper asyncWrap(20);
 
 // id -> atomic flag(wait/not wait response from server), buffer (args to server)
-static std::unordered_map<int64_t, std::pair<std::atomic<bool>, std::vector<std::string>>> usersBuffer;
+static std::unordered_map<int64_t, std::pair<std::atomic<bool>, std::list<std::string>>> usersBuffer;
 
 static const std::string serverBusy = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_WAIT_SERVER_RESP);
+static const std::string waitSendind = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_WAIT_SEND_TO_SRV);
 
 
 
@@ -78,10 +81,12 @@ namespace mb::cmd::any
 
 
 	void asyncDownloader(int64_t id, int entry, int ms) {
-		auto &it = usersBuffer.find(id);
+		constexpr auto srvcmd = "download", sep = "\n";
+		constexpr int maxlen = 5;
 
+		auto &it = usersBuffer.find(id);
 		if (it == usersBuffer.end()) {
-			std::cout << "collision~\n";
+			throw std::runtime_error("End-iterator!");
 			return;
 		}
 
@@ -95,9 +100,28 @@ namespace mb::cmd::any
 			if (buffer.size() == entry) {
 				flag.store(true);
 
+				if (buffer.size() > maxlen) {
+					buffer.resize(maxlen);
+				}
+
+				std::string text = waitSendind;
+				for (const auto &fname: buffer) {
+					//std::stringstream stream(fname);
+					//std::string temp;
+					//stream >> std::quoted(temp);
+					text += sep + fname;
+				}
+				asyncBot.getApi().sendMessage(id, text, false, 0, nullptr, mrk::HTML);
+
 				auto ctrl = BotController::getInstanse();
+
 				if (ctrl != nullptr) {
-					std::cout << "Response:\t" << ctrl->forward(core::makeServerCmd("douwnload", buffer));
+					buffer.push_front(std::to_string(id));
+					std::vector<std::string> args(buffer.begin(), buffer.end());
+
+					auto &s = core::makeServerCmd(srvcmd, args);
+					std::string response = ctrl->forward(core::makeServerCmd(srvcmd, args));
+					asyncBot.getApi().sendMessage(id, response, false, 0, nullptr, mrk::HTML);
 				}
 
 				buffer.clear();
@@ -118,21 +142,24 @@ namespace mb::cmd::any
 			usersBuffer[id].first.store(false);
 		}
 
-		auto &pair = usersBuffer.find(id)->second;
+		auto &it = usersBuffer.find(id)->second;
+		auto &flag = it.first;
+		auto &buff = it.second;
 
-		if (pair.first.load()) {
-			bot.getApi().sendMessage(id, serverBusy, false, 0, nullptr, mrk::HTML);
+		if (flag.load()) {
+			//bot.getApi().sendMessage(id, serverBusy, false, 0, nullptr, mrk::HTML);
 			return false;
 		}
 		if (audio) {
 			const auto &file = bot.getApi().getFile(audio->fileId);
 
 			std::lock_guard<std::mutex> lock(mutex);
-			if (pair.second.size() == 0) {
-				int entry = pair.second.size();
-				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, entry, 500); });
+			if (buff.size() == 0) {
+				int entry = buff.size();
+				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, entry, 1000); });
 			}
-			pair.second.push_back(file->filePath);
+			std::string srvarg = core::makeServerCmd(audio->fileName, { file->filePath });
+			buff.push_back(srvarg);
 		}
 
 		return false;
