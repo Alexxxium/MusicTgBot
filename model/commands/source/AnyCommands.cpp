@@ -140,23 +140,21 @@ namespace mb::cmd::any
 
 		auto &it = usersBuffer.find(id)->second;
 		auto &flag = it.first;
-		auto &buff = it.second;
+		auto &buffer = it.second;
 
 		if (flag.load()) {
 			//bot.getApi().sendMessage(id, serverBusy, false, 0, nullptr, mrk::HTML);
 			return false;
 		}
 		if (audio) {
-			const auto &file = bot.getApi().getFile(audio->fileId);
-
 			std::lock_guard<std::mutex> lock(mutex);
-			if (buff.size() == 0) {
-				int entry = buff.size();
+			if (buffer.size() == 0) {
+				int entry = buffer.size();
 				std::string plist = _name;
 				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, plist, entry, 500); });
 			}
-			std::string srvarg = core::makeServerCmd(audio->fileName, { file->filePath });
-			buff.push_back(srvarg);
+			std::string srvarg = core::makeServerCmd(audio->fileName, { audio->fileId });
+			buffer.push_back(srvarg);
 		}
 
 		return false;
