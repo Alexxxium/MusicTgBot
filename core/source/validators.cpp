@@ -68,6 +68,11 @@ namespace mb::core
 		return converter.from_bytes(utf8str);
 	}
 
+	std::string strUTF8(const std::wstring &utf16str) {
+		static std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+		return converter.to_bytes(utf16str);
+	}
+
 	bool isValidName(const std::string &file_or_dir) {
 		return isValidName(strUTF16(file_or_dir));
 	}
@@ -208,21 +213,23 @@ namespace mb::core
 			plist_existed   = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_EXISTED_NAME),
 			plist_uncorrect = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_UNCORRECT_NAME);
 
-		constexpr int8_t maxlen = 50, minlen = 3;
+		constexpr int maxlen = 12, minlen = 3;
 		const std::string &path = makePath(id, name);
 		const auto &api = bot.getApi();
+
+		std::wstring tgstr = core::strUTF16(name);
 		
 		if (subdir == pth::SUB_DIR_TO_PLIST) {
 			
-			if (name.size() < minlen) {
+			if (tgstr.size() < minlen) {
 				api.sendMessage(id, plist_little, false, 0, nullptr, mrk::HTML);
 				return false;
 			}
-			else if (name.size() > maxlen) {
+			else if (tgstr.size() > maxlen) {
 				api.sendMessage(id, plist_large, false, 0, nullptr, mrk::HTML);
 				return false;
 			}
-			else if (!isValidName(name)) {
+			else if (!isValidName(tgstr)) {
 				api.sendMessage(id, plist_uncorrect, false, 0, nullptr, mrk::HTML);
 				return false;
 			}
@@ -233,11 +240,11 @@ namespace mb::core
 		}
 		else if (subdir == pth::SUB_DIR_TO_TRACK) {
 			constexpr char bag = ':';
-			if (name.find(bag) != std::string::npos) { // BAG: user write symbol ':' and file system interpritate him how local path
+			if (tgstr.find(bag) != std::string::npos) { // BAG: user write symbol ':' and file system interpritate him how local path
 				api.sendMessage(id, track_uncorrect, false, 0, nullptr, mrk::HTML);
 				return false;
 			}
-			std::string data = fs::path(name).stem().string();
+			std::wstring data = fs::path(tgstr).stem().wstring();
 			if (data.empty()) {                                                                 
 				api.sendMessage(id, track_uncorrect, false, 0, nullptr, mrk::HTML);
 				return false;

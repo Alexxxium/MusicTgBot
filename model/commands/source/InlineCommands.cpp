@@ -9,7 +9,7 @@
 #include <filesystem>
 
 
-
+static const std::string lockSection = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_LOCK_SECTION);
 namespace fs = std::filesystem;
 
 namespace mb::cmd::inl
@@ -50,7 +50,15 @@ namespace mb::cmd::inl
 	bool RenamePListPressed::execute(TgBot::Bot &bot) const {
 		static std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_RENAME_MESSAGE);	
 
-		bot.getApi().sendMessage(_query->message->chat->id, text, false, 0, nullptr, mrk::HTML);
+		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		bot.getApi().sendMessage(id, text, false, 0, nullptr, mrk::HTML);
 		return true;
 	}
 
@@ -58,10 +66,15 @@ namespace mb::cmd::inl
 		constexpr auto tag_ = "<i>\"", _tag = "?\"</i>";
 		static std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_PLIST + pth::HTML_REMOVE_MESSAGE);
 
-		const std::string &data = core::suffixCmd(_query->data);
-		const std::string text  = html + tag_ + data + _tag;
-
 		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		const std::string &text  = html + tag_ + data + _tag;
 		const auto &menu  = InlKeyboardFactory::SelectMenu_YN(CBQ_REMOVE_PLAYLIST_YN, data);
 
 		bot.getApi().sendMessage(id, text, false, 0, menu, mrk::HTML);
@@ -71,14 +84,21 @@ namespace mb::cmd::inl
 	bool UploadPListPressed::execute(TgBot::Bot &bot) const {
 		constexpr auto cmd = "upload_group";
 		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
 
 		auto *ctrl = BotController::getInstanse();
 		if (ctrl == nullptr) {
 			throw err::NULL_INSTANSE;
 		}
 
-		std::string args = core::makeServerCmd(cmd, { std::to_string(id), core::suffixCmd(_query->data) });
+		std::string args = core::makeServerCmd(cmd, { std::to_string(id), data });
 		std::string reply = ctrl->forward(args);
+		core::lockToResponse(reply, id, data);
 
 		bot.getApi().sendMessage(id, reply, false, 0, nullptr, mrk::HTML);
 		return true;
@@ -86,6 +106,13 @@ namespace mb::cmd::inl
 
 	bool AddTracksPressed::execute(TgBot::Bot &bot) const {
 		static std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_ADDTRACKS);
+		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
 
 		bot.getApi().sendMessage(_query->message->chat->id, text, false, 0, nullptr, mrk::HTML);
 		return true;
@@ -103,10 +130,11 @@ namespace mb::cmd::inl
 
 		const int64_t &id = _query->message->chat->id;
 		const std::string &cback = core::suffixCmd(_query->data);
-		const std::string &text  = header + tag_ + core::getTrack(id, cback) + _tag;
+		const std::string &text  = header + tag_ + core::getTrack(id, cback) + core::getExten(id, cback) + _tag;
 
-		bot.getApi().sendMessage(id, text, false, 0,
-			InlKeyboardFactory::TrackMenu(id, cback), mrk::HTML);
+		auto menu = InlKeyboardFactory::TrackMenu(id, cback);
+		bot.getApi().sendMessage(id, text, false, 0, menu, mrk::HTML);
+
 
 		return true;
 	}
@@ -114,7 +142,15 @@ namespace mb::cmd::inl
 	bool RenameTrackPressed::execute(TgBot::Bot &bot) const {
 		static const std::string html = core::parseHTML(pth::MESSAGE_DIR + pth::SUB_DIR_TO_TRACK + pth::HTML_RENAME_MESSAGE);
 
-		bot.getApi().sendMessage(_query->message->chat->id, html, false, 0, nullptr, mrk::HTML);
+		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		bot.getApi().sendMessage(id, html, false, 0, nullptr, mrk::HTML);
 		return true;
 	}
 
@@ -124,6 +160,12 @@ namespace mb::cmd::inl
 
 		const int64_t &id = _query->message->chat->id;
 		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
 		const std::string &text = html + tag_ + core::getTrack(id, data) + _tag;
 		const auto &menu  = InlKeyboardFactory::SelectMenu_YN(CBQ_REMOVE_TRACK_YN, data);
 
@@ -134,14 +176,21 @@ namespace mb::cmd::inl
 	bool UploadTrackPressed::execute(TgBot::Bot &bot) const {
 		constexpr auto cmd = "upload";
 		const int64_t &id = _query->message->chat->id;
+		const std::string &data = core::suffixCmd(_query->data);
+
+		if (core::checkLock(id, data)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
 
 		auto *ctrl = BotController::getInstanse();
 		if (ctrl == nullptr) {
 			throw err::NULL_INSTANSE;
 		}
 
-		std::string args = core::makeServerCmd(cmd, { std::to_string(id), core::suffixCmd(_query->data) });
+		std::string args = core::makeServerCmd(cmd, { std::to_string(id), data});
 		std::string reply = ctrl->forward(args);
+		core::lockToResponse(reply, id, data);
 
 		bot.getApi().sendMessage(id, reply, false, 0, nullptr, mrk::HTML);
 		return true;
@@ -165,6 +214,11 @@ namespace mb::cmd::inl
 			return Execute<inl::TrackPressed>::execute(CBQ_SHOW_TRACK, message, bot, prevcmd);
 		}
 
+		if (core::checkLock(id, lclpth)) {
+			bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
 		core::remove(id, lclpth);
 
 		const std::string &plist = core::getPList(id, lclpth);
@@ -174,10 +228,16 @@ namespace mb::cmd::inl
 	}
 
 	bool RemovePListPressed_YN::execute(TgBot::Bot &bot) const {
+		const int64_t &id = _query->message->chat->id;
 		const std::string &data = core::suffixCmd(_query->data);
+		const std::string &prevcmd = core::makeCallback(CBQ_SHOW_TRACK, core::suffixCmd(BotController::bufferEntry(id)));
 
 		if (data != NONE) {
-			core::remove(_query->message->chat->id, data);
+			if (core::checkLock(id, data)) {
+				bot.getApi().sendMessage(id, lockSection, false, 0, nullptr, mrk::HTML);
+				return false;
+			}
+			core::remove(id, data);
 		}
 
 		return Execute<mcr::ShowPlayLists>::execute(NONE, _query->message, bot);

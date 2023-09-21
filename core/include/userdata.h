@@ -18,6 +18,17 @@ namespace mb::core
 	size_t countPLists(const int64_t &user_id);
 	size_t countTracks(const int64_t &user_id, const std::string &plist);
 
+	// Locked/unlocked playlist to anything changes
+	void lock(const int64_t &id, const std::string &plist, bool lock = true);
+
+	// Return lock-state: true - playlist is blocked
+	bool checkLock(const int64_t &id, const std::string &plist);
+
+	// Lock/unlock playlist reffering to response from server
+	void lockToResponse(const std::string &response, const int64_t &id, const std::string &plist);
+
+	// Unlock all playlists to start/restart bot
+	void changeData();
 
 	// Shell cath 'BotErrors' (old previos buttons click in chat) and notify user, that data is old. Return good/fail click
 	bool protectedShell(const int64_t &id, TgBot::Bot &bot, const std::function<void()> &func);

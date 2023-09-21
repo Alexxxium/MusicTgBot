@@ -45,6 +45,7 @@ namespace mb
 		err::CANT_OPEN_TXT_FILE        ("Cant`t open file.txt!"),
 		err::CANT_RENAME_PLAYLIST      ("Can`t rename playlist!"),
 		err::CANT_RENAME_TRACK         ("Can`t rename track!"),
+		err::CANT_OPEN_LOCK_FILE       ("Can`t open lock.txt!"),
 		err::UNKNOWN_SUBDIR            ("Unknown subdirectory!"),
 		err::UNCORREKT_PATH            ("Uncorrect path!"),
 
@@ -95,7 +96,10 @@ namespace mb
 		pth::HTML_CREATED_PLIST        = u8"CreatedPlist.html",
 		pth::HTML_OLD_DATA             = u8"OldData.html",
 		pth::HTML_WAIT_SERVER_RESP     = u8"WaitServerResponse.html",
-		pth::HTML_WAIT_SEND_TO_SRV     = u8"WaitSendingToServer.html";
+		pth::HTML_WAIT_SEND_TO_SRV     = u8"WaitSendingToServer.html",
+		
+		pth::LOCK_FILE                 = u8"lock.txt",
+		pth::HTML_LOCK_SECTION         = u8"lockSection.html";
 
 
 

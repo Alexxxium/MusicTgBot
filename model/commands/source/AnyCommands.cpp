@@ -117,6 +117,8 @@ namespace mb::cmd::any
 					const auto &config = core::makeServerCmd(core::makeServerCmd(srvcmd, { std::to_string(id), plist }), args);
 
 					std::string response = ctrl->forward(config);
+					core::lockToResponse(response, id, plist);
+
 					asyncBot.getApi().sendMessage(id, response, false, 0, nullptr, mrk::HTML);
 				}
 
@@ -151,7 +153,9 @@ namespace mb::cmd::any
 			if (buffer.size() == 0) {
 				int entry = buffer.size();
 				std::string plist = _name;
-				asyncWrap.addToFreeQueue([=]() { asyncDownloader(id, plist, entry, 500); });
+				asyncWrap.addToFreeQueue([=]() {
+					asyncDownloader(id, plist, entry, 500);
+				});
 			}
 			std::string srvarg = core::makeServerCmd(audio->fileName, { audio->fileId });
 			buffer.push_back(srvarg);

@@ -110,6 +110,7 @@ namespace mb
 			CANT_OPEN_HTML_FILE,
 			CANT_RENAME_PLAYLIST,
 			CANT_RENAME_TRACK,
+			CANT_OPEN_LOCK_FILE,
 			UNKNOWN_SUBDIR,
 			UNCORREKT_PATH,
 
@@ -167,9 +168,11 @@ namespace mb
 			HTML_CREATED_PLIST,
 			HTML_OLD_DATA,
 			HTML_WAIT_SERVER_RESP,
-			HTML_WAIT_SEND_TO_SRV;
+			HTML_WAIT_SEND_TO_SRV,
+			
+			LOCK_FILE,
+			HTML_LOCK_SECTION;
 	};
-
 
 
 	bool operator==(types type, const std::string &str);

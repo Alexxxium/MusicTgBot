@@ -16,6 +16,7 @@ namespace mb::core
 
 	
 	std::wstring strUTF16(const std::string &utf8str);
+	std::string strUTF8(const std::wstring &utf16str);
 	bool isValidName(const std::string  &file_or_dir);
 	bool isValidName(const std::wstring &file_or_dir);
 	

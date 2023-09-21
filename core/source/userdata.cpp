@@ -13,8 +13,11 @@ namespace mb::core
 		constexpr auto sl = "/";
 
 		std::vector<std::string> res;
-		std::string target_dir = mb::pth::USER_DATA_DIR + std::to_string(user_id) + sl;
+		std::string target_dir = pth::USER_DATA_DIR + std::to_string(user_id) + sl;
 
+		if (!fs::exists(pth::USER_DATA_DIR)) {
+			fs::create_directory(pth::USER_DATA_DIR);
+		}
 		if (!fs::exists(target_dir)) {
 			fs::create_directory(target_dir);
 			return {};
@@ -131,6 +134,78 @@ namespace mb::core
 	}
 
 
+	void lock(const int64_t &id, const std::string &loclpath, bool lock) {
+		constexpr auto sl = "/";
+		const std::string &path = pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
+
+		if (!fs::exists(path)) {
+			std::ofstream file(path);
+			if(file.is_open()) {
+				file << std::to_string(lock);
+				file.close();
+			}
+			else {
+				throw err::CANT_OPEN_LOCK_FILE;
+			}
+		}
+		else {
+			std::fstream file(path);
+			if (file.is_open()) {
+				file.seekg(0, std::ios::beg);
+				file << std::to_string(lock);
+				file.close();
+			}
+			else {
+				throw err::CANT_OPEN_LOCK_FILE;
+			}
+		}
+	}
+
+	bool checkLock(const int64_t &id, const std::string &loclpath) {
+		constexpr auto sl = "/", lockbit = "1";
+		const std::string &path = pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
+
+		if (!fs::exists(path)) {
+			lock(id, loclpath, false);
+			return false;
+		}
+		std::fstream file(path);
+		if (!file.is_open()) {
+			throw err::CANT_OPEN_LOCK_FILE;
+		}
+		
+		std::string buff;
+		file >> buff;
+
+		return buff == lockbit ? true : false;
+	}
+
+	void lockToResponse(const std::string &response, const int64_t &id, const std::string &plist) {
+		constexpr auto good = u8"<i><b>Ответ от сервера: </b>запрос принят и отправлен в очередь!</i>";
+		response == good ? lock(id, plist, true) : lock(id, plist, false);
+	}
+
+	void changeData() {
+		std::string target_dir = pth::USER_DATA_DIR;
+		std::vector<int64_t> ids;
+
+		for (const auto &entry: fs::directory_iterator(target_dir)) {
+			if (entry.is_directory()) {
+				try {
+					ids.push_back(std::stoll(entry.path().stem().string()));
+				}
+				catch (...) {
+					// unknown dir
+				}
+			}
+		}
+		for (const auto &id: ids) {
+			const auto &plists = core::getPlayLists(id);
+			for (const auto &plist: plists) {
+				lock(id, plist, false);
+			}
+		}
+	}
 
 	bool protectedShell(const int64_t &id, TgBot::Bot &bot, const std::function<void()> &func) {
 		static const std::string text = core::parseHTML(pth::MESSAGE_DIR + pth::HTML_OLD_DATA);

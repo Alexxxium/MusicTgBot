@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <codecvt>
 #include <regex>
+#include <fstream>
 
 
 namespace fs = std::filesystem;
@@ -140,6 +141,37 @@ namespace srv
 			stem.resize(maxlen);
 			track = stem + ext;
 			update(id, plist, track);
+		}
+	}
+
+	void unlock(const std::string &id, const std::string &loclpath) {
+		constexpr auto sl = "/", lockfile = "lock.txt", unlockbit = "0";
+		std::string full = pth::USER_DATA_DIR + id + sl + loclpath;
+
+		std::string playlist;
+		if (fs::is_directory(full)) {
+			playlist = pth::USER_DATA_DIR + id + sl + fs::path(full).stem().string();
+		}
+		else {
+			playlist = fs::path(full).parent_path().string();
+		}
+
+		std::string path = playlist + sl + lockfile;
+
+		if (!fs::exists(path)) {
+			std::ofstream file(path);
+			if (!file.is_open()) {
+				throw std::runtime_error("Can`t open lock.txt!");
+			}
+			file << unlockbit;
+		}
+		else {
+			std::fstream file(path);
+			if (!file.is_open()) {
+				throw std::runtime_error("Can`t open lock.txt!");
+			}
+			file.seekg(0, std::ios::beg);
+			file << unlockbit;
 		}
 	}
 }

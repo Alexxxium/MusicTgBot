@@ -37,6 +37,8 @@ set(SOURCE
     server/patterns/source/TaskQueueWrapp.cpp 
 )
 
+add_definitions(-fexec-charset=CP1251)
+
 add_executable(MusicBot ${SOURCE})
 
 add_subdirectory("server")

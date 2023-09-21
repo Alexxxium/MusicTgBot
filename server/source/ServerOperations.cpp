@@ -10,7 +10,6 @@ TgBot::Bot BOT(srv::init::TOKEN);
 
 namespace fs = std::filesystem;
 
-
 namespace srv {
 
 	void SendAudio::execute(const std::vector<std::string> &args) const {
@@ -33,7 +32,9 @@ namespace srv {
 				std::lock_guard<std::mutex> lock(mutex);
 				BOT.getApi().sendAudio(id, audio);
 			}
+			unlock(args[start_id], args[i]);
 		}
+		
 	}
 
 
@@ -61,6 +62,7 @@ namespace srv {
 					BOT.getApi().sendAudio(id, audio);
 				}
 			}
+			unlock(args[start_id], args[i]);
 		}
 	}
 
@@ -69,10 +71,11 @@ namespace srv {
 		constexpr auto 
 			sl = "/", 
 			_i = "</i>", 
-			s_ = "<s>", 
 			_s = "</s>", 
 			sep = "\n",
+			s_ = "<s>",
 			report = u8"<i><b>Отчет:</b>";
+
 		constexpr int
 			start_id = 1,
 			start_name = 2,
@@ -134,5 +137,6 @@ namespace srv {
 		}
 		std::lock_guard<std::mutex> lock(mutex);
 		BOT.getApi().sendMessage(id, response + _i, false, 0, nullptr, "html");
+		unlock(args[start_id], args[start_name]);
 	}
 }
