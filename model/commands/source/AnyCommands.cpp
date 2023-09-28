@@ -187,6 +187,9 @@ namespace mb::cmd::any
 				args.push_back(buff);
 			}
 		}
+		if (args.empty()) {
+			return false;
+		}
 		
 		auto ctrl = BotController::getInstanse();
 		std::string srvcmd = core::makeServerCmd(core::makeServerCmd(cmd, { std::to_string(id) }), args);

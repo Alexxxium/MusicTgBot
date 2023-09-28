@@ -1,6 +1,7 @@
 /.vs 
 /out 
 /test data 
+/buffer data
 /server/.vs 
 /server/out 
 *.json 
