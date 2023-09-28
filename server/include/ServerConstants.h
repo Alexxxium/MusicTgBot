@@ -41,6 +41,8 @@ namespace srv
 	class pth {
 	public:
 		static const std::string
-			USER_DATA_DIR;
+			USER_DATA_DIR,
+			BUFFER_DIR,
+			DOWNLOAD_SCRIPT;
 	};
 }

@@ -77,6 +77,7 @@ namespace mb
 		pth::HTML_INFO                 = u8"info.html",
 
 		pth::USER_DATA_DIR             = u8"D:/Prog/C++ prog/MusicTgBot/test data/",
+		pth::BUFFER_DIR                = u8"D:/Prog/C++ prog/MusicTgBot/buffer data/",
 		pth::MESSAGE_DIR               = u8"D:/Prog/C++ prog/MusicTgBot/constants/messages/",
 
 		pth::HTML_LITTLE_NAME          = u8"LittleName.html",
@@ -170,5 +171,4 @@ namespace mb
 	bool operator!=(const std::string &str, types type) {
 		return type != str;
 	}
-	
 }

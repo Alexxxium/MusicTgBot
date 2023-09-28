@@ -139,4 +139,43 @@ namespace srv {
 		BOT.getApi().sendMessage(id, response + _i, false, 0, nullptr, "html");
 		unlock(args[start_id], args[start_name]);
 	}
+
+
+	std::string downloadFromURL(const std::string &savepath, const std::string &url) {
+		constexpr char wr = '"', sp = ' ', exsep = '.';
+		static const std::vector<std::string> extlist = { "wav", "mp3" };
+		
+		for (const auto &ext: extlist) {
+			std::string output = savepath + exsep + ext;
+			std::string exestr = (wr + pth::DOWNLOAD_SCRIPT + wr) + sp + (wr + savepath + wr) + sp + (ext) + sp + (wr + url + wr);
+			std::cout << exestr << '\n' << exestr.c_str() << '\n';
+			system(exestr.c_str());
+
+			if (fs::exists(output)) {
+				return ext;
+			}
+		}
+		return "";
+	}
+
+	void SendAudioFromURL::execute(const std::vector<std::string> &args) const {
+		constexpr auto sl = "/", filestem = "default";
+		constexpr int
+			start_id = 1,
+			start_args = 2,
+			notation_size = 3;
+
+		if (args.size() < notation_size) {
+			throw err::INVALID_NOTATION;
+		}
+
+		int64_t id = std::stoll(args[start_id]);
+		std::string savepath = pth::BUFFER_DIR + args[start_id] + sl + filestem;
+
+		for (int i = start_args; i < args.size(); ++i) {
+			downloadFromURL(savepath, args[i]);
+		}
+
+		unlock(args[start_id], "");
+	}
 }

@@ -36,4 +36,12 @@ namespace mb::cmd::any
 
 		bool execute(TgBot::Bot &bot) const override;
 	};
+
+	class DownloadTrackFromURL: public AnyCommand {
+	public:
+		explicit DownloadTrackFromURL(const std::string &name, const TgBot::Message::Ptr &message = TgBot::Message::Ptr()): AnyCommand(name, message) {}
+		Command* clone() const noexcept override { return new DownloadTrackFromURL(*this); }
+
+		bool execute(TgBot::Bot &bot) const override;
+	};
 }

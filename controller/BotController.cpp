@@ -66,6 +66,9 @@ namespace mb
 		else if (type == CBQ_ADD_TRACKS) {
 			return new cmd::any::DownloadTrack(cback);
 		}
+		else {
+			return new cmd::any::DownloadTrackFromURL(cback);
+		}
 
 		return nullptr;
 	}

@@ -146,6 +146,7 @@ namespace mb
 
 // Dirs:
 			USER_DATA_DIR,
+			BUFFER_DIR,
 			MESSAGE_DIR,
 
 // Sub dirs to sames html files:

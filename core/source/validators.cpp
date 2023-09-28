@@ -83,6 +83,11 @@ namespace mb::core
 		return std::regex_search(file_or_dir, valid);
 	}
 
+	bool isURL(const std::string &urlstr) {
+		constexpr auto urlprefix = "https://";
+		return urlstr.find(urlprefix) == std::string::npos ? false : true;
+	}
+
 
 
 	// O(N) max N = 10 to 20 <- not problem

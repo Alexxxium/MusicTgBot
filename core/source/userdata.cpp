@@ -136,11 +136,24 @@ namespace mb::core
 
 	void lock(const int64_t &id, const std::string &loclpath, bool lock) {
 		constexpr auto sl = "/";
-		const std::string &path = pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
+		std::string path = loclpath.empty() ? 
+			pth::BUFFER_DIR + std::to_string(id) + sl + pth::LOCK_FILE : 
+			pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
+
+		if (!fs::exists(pth::BUFFER_DIR)) {
+			fs::create_directory(pth::BUFFER_DIR);
+		}
+		if (!fs::exists(pth::USER_DATA_DIR)) {
+			fs::create_directory(pth::USER_DATA_DIR);
+		}
 
 		if (!fs::exists(path)) {
+			std::string parent_dir = fs::path(path).parent_path().string();
+			if (!fs::exists(parent_dir)) {
+				fs::create_directory(parent_dir);
+			}
 			std::ofstream file(path);
-			if(file.is_open()) {
+			if (file.is_open()) {
 				file << std::to_string(lock);
 				file.close();
 			}
@@ -163,7 +176,9 @@ namespace mb::core
 
 	bool checkLock(const int64_t &id, const std::string &loclpath) {
 		constexpr auto sl = "/", lockbit = "1";
-		const std::string &path = pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
+		std::string path = loclpath.empty() ? 
+			pth::BUFFER_DIR + std::to_string(id) + sl + pth::LOCK_FILE :
+			pth::USER_DATA_DIR + std::to_string(id) + sl + core::getPList(id, loclpath) + sl + pth::LOCK_FILE;
 
 		if (!fs::exists(path)) {
 			lock(id, loclpath, false);
@@ -173,7 +188,7 @@ namespace mb::core
 		if (!file.is_open()) {
 			throw err::CANT_OPEN_LOCK_FILE;
 		}
-		
+
 		std::string buff;
 		file >> buff;
 
@@ -186,20 +201,32 @@ namespace mb::core
 	}
 
 	void changeData() {
-		std::string target_dir = pth::USER_DATA_DIR;
 		std::vector<int64_t> ids;
 
-		for (const auto &entry: fs::directory_iterator(target_dir)) {
+		if (!fs::exists(pth::USER_DATA_DIR)) {
+			fs::create_directory(pth::USER_DATA_DIR);
+		}
+		if (!fs::exists(pth::BUFFER_DIR)) {
+			fs::create_directory(pth::BUFFER_DIR);
+		}
+		else {
+			fs::remove_all(pth::BUFFER_DIR);
+			changeData();
+		}
+
+		for (const auto &entry: fs::directory_iterator(pth::USER_DATA_DIR)) {
 			if (entry.is_directory()) {
 				try {
 					ids.push_back(std::stoll(entry.path().stem().string()));
 				}
 				catch (...) {
-					// unknown dir
+					// not int dir name
 				}
 			}
 		}
+
 		for (const auto &id: ids) {
+			lock(id, "", false);
 			const auto &plists = core::getPlayLists(id);
 			for (const auto &plist: plists) {
 				lock(id, plist, false);

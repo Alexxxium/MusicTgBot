@@ -163,4 +163,41 @@ namespace mb::cmd::any
 
 		return false;
 	}
+
+
+
+
+	bool DownloadTrackFromURL::execute(TgBot::Bot &bot) const {
+		constexpr int maxlen = 5;
+		constexpr auto cmd = "url_upload";
+		const int64_t &id = _message->chat->id;
+
+		if (core::checkLock(id, "")) {
+			bot.getApi().sendMessage(id, serverBusy, false, 0, nullptr, mrk::HTML);
+			return false;
+		}
+
+		std::stringstream stream(_message->text);
+		std::vector<std::string> args;
+
+		while (stream && args.size() < maxlen) {
+			std::string buff;
+			stream >> buff;
+			if (core::isURL(buff)) {
+				args.push_back(buff);
+			}
+		}
+		
+		auto ctrl = BotController::getInstanse();
+		std::string srvcmd = core::makeServerCmd(core::makeServerCmd(cmd, { std::to_string(id) }), args);
+
+		if (ctrl == nullptr) {
+			throw err::NULL_INSTANSE;
+		}
+
+		std::string response = ctrl->forward(srvcmd);
+		core::lockToResponse(response, id, "");
+		bot.getApi().sendMessage(_message->chat->id, response, false, 0, nullptr, mrk::HTML);
+		return false;
+	}
 }

@@ -19,6 +19,7 @@ namespace mb::core
 	std::string strUTF8(const std::wstring &utf16str);
 	bool isValidName(const std::string  &file_or_dir);
 	bool isValidName(const std::wstring &file_or_dir);
+	bool isURL(const std::string &urlstr);
 	
 
 	std::string makePath(const std::vector<std::string> &list);

@@ -16,14 +16,16 @@ namespace srv
 	{
 		{ "download"    , 3 },
 		{ "upload"      , 2 },
-		{ "upload_group", 2 }
+		{ "upload_group", 2 },
+		{ "url_upload"  , 2 }
 	};
 
 	const std::unordered_map<std::string, Operation*> init::HANDLERS
 	{
 		{ "upload"      , new SendAudio          },
 		{ "upload_group", new SendAudioGroup     },
-		{ "download"    , new DownloadAudioGroup }
+		{ "download"    , new DownloadAudioGroup },
+		{ "url_upload"  , new SendAudioFromURL   }
 	};
 
 
@@ -46,5 +48,7 @@ namespace srv
 		err::RESPONSE_FAILED("Error sending response!");
 
 	const std::string
-		pth::USER_DATA_DIR = "D:/Prog/C++ prog/MusicTgBot/test data/";
+		pth::USER_DATA_DIR = u8"D:/Prog/C++ prog/MusicTgBot/test data/",
+		pth::BUFFER_DIR = u8"D:/Prog/C++ prog/MusicTgBot/buffer data/",
+		pth::DOWNLOAD_SCRIPT = u8"D:/Prog/C++ prog/MusicTgBot/server/scripts/script.bat";
 }

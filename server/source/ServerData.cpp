@@ -148,15 +148,12 @@ namespace srv
 		constexpr auto sl = "/", lockfile = "lock.txt", unlockbit = "0";
 		std::string full = pth::USER_DATA_DIR + id + sl + loclpath;
 
-		std::string playlist;
-		if (fs::is_directory(full)) {
-			playlist = pth::USER_DATA_DIR + id + sl + fs::path(full).stem().string();
-		}
-		else {
-			playlist = fs::path(full).parent_path().string();
-		}
+		std::string path = 
+			loclpath.empty() ? pth::BUFFER_DIR + id + sl :                                                   // empty arg        -> buffer dir
+			fs::is_directory(full) ? pth::USER_DATA_DIR + id + sl + fs::path(full).stem().string() + sl :    // is directory     -> use dir name
+			fs::path(full).parent_path().string() + sl;                                                      // is not directory -> use parent path (is dir)
 
-		std::string path = playlist + sl + lockfile;
+		path += lockfile;
 
 		if (!fs::exists(path)) {
 			std::ofstream file(path);
