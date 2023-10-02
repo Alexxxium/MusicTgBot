@@ -112,7 +112,7 @@ namespace srv {
 			s_ = "<s>",
 			urlcmd = "url",
 			dfltname = "default",
-			report = u8"<i><b>Îò÷åò:</b>";
+			report = u8"<i><b>ÃŽÃ²Ã·Ã¥Ã²:</b>";
 
 		constexpr int
 			start_id = 1,
@@ -138,6 +138,7 @@ namespace srv {
 				if (!url.empty()) {
 					if (count >= max_tracks) {
 						response += (std::string)sep + s_ + args[i] + _s;
+						continue;
 					}
 					std::string name = dfltname;
 					std::string res = tryDownload(path + dfltname, args[i], [&](std::string &track) { 
@@ -202,7 +203,7 @@ namespace srv {
 
 	void SendAudioFromURL::execute(const std::vector<std::string> &args) const {
 		constexpr auto sl = "/", filestem = "default", s_ = "<s><i>", _s = "</i></s>", sep = "\n";
-		std::string report = u8"<i><b>Îò÷åò:</b></i>";
+		std::string report = u8"<i><b>ÃŽÃ²Ã·Ã¥Ã²:</b></i>";
 		constexpr int
 			start_id = 1,
 			start_args = 2,
