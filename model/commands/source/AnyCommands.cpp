@@ -133,6 +133,7 @@ namespace mb::cmd::any
 	}
 
 	bool DownloadTrack::execute(TgBot::Bot &bot) const {
+		constexpr auto url = "url";
 		const auto &audio = _message->audio;
 		const int64_t &id = _message->chat->id;
 		
@@ -148,16 +149,25 @@ namespace mb::cmd::any
 			//bot.getApi().sendMessage(id, serverBusy, false, 0, nullptr, mrk::HTML);
 			return false;
 		}
-		if (audio) {
-			std::lock_guard<std::mutex> lock(mutex);
-			if (buffer.size() == 0) {
-				int entry = buffer.size();
-				std::string plist = _name;
-				asyncWrap.addToFreeQueue([=]() {
-					asyncDownloader(id, plist, entry, 500);
-				});
+		if (buffer.empty()) {
+			int entry = buffer.size();
+			std::string plist = _name;
+			asyncWrap.addToFreeQueue([=]() {
+				asyncDownloader(id, plist, entry, 500);
+			});
+			std::stringstream stream(_message->text);
+			while (stream) {
+				std::string buffurl;
+				stream >> buffurl;
+				if (core::isURL(buffurl)) {
+					std::lock_guard<std::mutex> lock(mutex);
+					buffer.push_back(core::makeServerCmd(url, { buffurl }));
+				}
 			}
+		}
+		if (audio) {
 			std::string srvarg = core::makeServerCmd(audio->fileName, { audio->fileId });
+			std::lock_guard<std::mutex> lock(mutex);
 			buffer.push_back(srvarg);
 		}
 

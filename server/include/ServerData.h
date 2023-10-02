@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <WinSock2.h>
 
 
 
@@ -21,4 +22,13 @@ namespace srv
 	void unlock(const std::string &id, const std::string &loclpath);
 
 	std::vector<std::string> split(std::string &&parsestr, const std::string &sep);
+
+
+	void GetChildProcesses(DWORD parentPID, std::vector<DWORD> &childPIDs);
+
+	void TerminateChildProcesses(DWORD parentPID);
+
+
+	// Ñreates a win32 process and waits for it to complite or will come timeout
+	void startProcess(const std::string &syscmd, int timeout, int pause);
 }

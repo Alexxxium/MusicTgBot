@@ -27,7 +27,7 @@ echo . Source URL:......................%url%
 echo . Audio extension:................. %ext%
 echo . Max source size:................. %size%
 echo . Max count of sources:............ %count%
-echo . Timeout:......................... %timeout%s
+echo . Current directory:............... %CD%
 echo .......................................................................................
 
 yt-dlp -o %path% --max-filesize %size% --max-downloads %count% --socket-timeout %timeout% --extract-audio --audio-format %ext%  %url%

@@ -97,12 +97,13 @@ namespace algs
 				std::lock_guard<std::mutex> lock(mutex);
 				if (!queue.empty()) {
 					task = queue.front();
-					queue.pop();
 				}
 			}
 
 			if (task != nullptr) {
 				task();
+				std::lock_guard<std::mutex> lock(mutex);
+				queue.pop();
 			}
 			else {
 				std::this_thread::sleep_for(std::chrono::milliseconds(milsec));

@@ -4,6 +4,8 @@
 #include <codecvt>
 #include <regex>
 #include <fstream>
+#include <TlHelp32.h>
+
 
 
 namespace fs = std::filesystem;
@@ -79,6 +81,8 @@ namespace srv
 		return res;
 	}
 
+
+
 	bool hasHash(const std::string &track) {
 		constexpr size_t len = 4;
 		constexpr char sep = '-', a = 'a', z = 'z';
@@ -89,13 +93,11 @@ namespace srv
 		if (stem[len - 1] != sep) {
 			return false;
 		}
-
 		for (int i = 0; i < len - 1; ++i) {
 			if (stem[i] < a || stem[i] > z) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -109,7 +111,6 @@ namespace srv
 		for (int i = 0; i < len; ++i) {
 			res += a + rand() % z;
 		}
-
 		return res + sep;
 	}
 
@@ -170,5 +171,85 @@ namespace srv
 			file.seekg(0, std::ios::beg);
 			file << unlockbit;
 		}
+	}
+
+
+	void GetChildProcesses(DWORD parentPID, std::vector<DWORD>& childPIDs) {
+		PROCESSENTRY32 pe32;
+		ZeroMemory(&pe32, sizeof(pe32));
+		pe32.dwSize = sizeof(PROCESSENTRY32);
+		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+
+		if (hSnapshot == INVALID_HANDLE_VALUE) {
+			return;
+		}
+
+		if (Process32First(hSnapshot, &pe32)) {
+			do {
+				if (pe32.th32ParentProcessID == parentPID) {
+					childPIDs.push_back(pe32.th32ProcessID);
+					GetChildProcesses(pe32.th32ProcessID, childPIDs);
+				}
+			} while (Process32Next(hSnapshot, &pe32));
+		}
+		CloseHandle(hSnapshot);
+	}
+
+	void TerminateChildProcesses(DWORD parentPID) {
+		std::vector<DWORD> childPIDs;
+		GetChildProcesses(parentPID, childPIDs);
+
+		for (DWORD childPID: childPIDs) {
+			HANDLE hChildProcess = OpenProcess(PROCESS_TERMINATE, FALSE, childPID);
+			if (hChildProcess != NULL) {
+				TerminateProcess(hChildProcess, 0);
+				CloseHandle(hChildProcess);
+			}
+		}
+	}
+
+	void startProcess(const std::string &syscmd, int timeout, int pause) {
+		constexpr auto cd = "cd ", wr = "\"";
+		if (pause > timeout || timeout <= 0 || pause <= 0) {
+			throw std::runtime_error("Invalid timeout or pause!");
+		}
+
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+
+		ZeroMemory(&si, sizeof(si));
+		ZeroMemory(&pi, sizeof(pi));
+
+		si.cb = sizeof(si);
+		LPSTR lp = const_cast<LPSTR>(syscmd.c_str());
+
+		if (!CreateProcess(NULL, lp, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
+			throw err::CREATE_PROCESS_FAILED;
+		}
+
+		int time = 0;
+		DWORD exitCode;
+		while (time < timeout) {
+			DWORD waitResult = WaitForSingleObject(pi.hProcess, pause);
+
+			if (waitResult == WAIT_OBJECT_0) {
+				GetExitCodeProcess(pi.hProcess, &exitCode);
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
+				return;
+			}
+			else if (waitResult == WAIT_TIMEOUT) {
+				time += pause;
+			}
+			else {
+				break;
+			}
+		}
+
+		TerminateChildProcesses(pi.dwProcessId);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
 	}
 }

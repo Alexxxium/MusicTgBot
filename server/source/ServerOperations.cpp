@@ -67,6 +67,41 @@ namespace srv {
 		}
 	}
 
+	std::string tryDownload(std::string savepath, const std::string &url, const std::function<void(std::string&)> &update = nullptr) {
+		constexpr char wr = '"', sp = ' ', pt = '.', sl = '/';
+		constexpr auto cd = "cd", and = " && ";
+		constexpr int maxbyites = 50 * 1024 * 1024;
+
+		static std::string script = fs::path(pth::DOWNLOAD_SCRIPT).filename().string();
+		static std::vector<std::string> extlist = { "flac", "mp3" };
+
+		for (const auto &ext: extlist) {
+			std::string output = savepath + pt + ext;
+			if (update != nullptr) {
+				std::string track = fs::path(output).filename().string();
+				update(track);
+				savepath = fs::path(savepath).parent_path().string() + sl + fs::path(track).stem().string();
+			}
+			std::string syscmd = (script) + sp + (wr + savepath + wr) + sp + (ext) + sp + (wr + url + wr);
+			startProcess(syscmd, 20'000, 500);
+
+			output = savepath + pt + ext;
+			std::ifstream audio(output, std::ios::binary | std::ios::ate);
+			if (!audio.is_open() || !fs::exists(output)) {
+				continue;
+			}
+			audio.seekg(0, std::ios::end);
+			if (audio.tellg() > maxbyites) {
+				audio.close();
+				fs::remove(output);
+				continue;
+			}
+			else {
+				return pt + ext;
+			}
+		}
+		return "";
+	}
 
 	void DownloadAudioGroup::execute(const std::vector<std::string> &args) const {
 		constexpr auto 
@@ -75,6 +110,8 @@ namespace srv {
 			_s = "</s>", 
 			sep = "\n",
 			s_ = "<s>",
+			urlcmd = "url",
+			dfltname = "default",
 			report = u8"<i><b>Отчет:</b>";
 
 		constexpr int
@@ -92,12 +129,31 @@ namespace srv {
 		const std::string &plist = args[start_name];
 		int count = countTracks(id, plist);
 
-		std::string track;
+		std::string track, url;
 		std::string response = report;
 		std::string path = pth::USER_DATA_DIR + args[start_id] + sl + args[start_name] + sl;
 		
 		for (int i = start_args; i < args.size(); ++i) {
 			if (i % 2 == 0) {
+				if (!url.empty()) {
+					if (count >= max_tracks) {
+						response += (std::string)sep + s_ + args[i] + _s;
+					}
+					std::string name = dfltname;
+					std::string res = tryDownload(path + dfltname, args[i], [&](std::string &track) { 
+						update(args[start_id], plist, track); 
+					});
+					if (res.empty()) {
+						response += (std::string) sep + s_ + args[i] + _s;
+					}
+					else {
+						response += (std::string)sep + args[i];
+						++count;
+					}
+					url.clear();
+					continue;
+				}
+
 				TgBot::File::Ptr tgfile;
 				std::string bytes;
 
@@ -133,7 +189,7 @@ namespace srv {
 				}
 			}
 			else {
-				track = args[i];
+				args[i] == urlcmd ? url = args[i] : track = args[i];
 			}
 		}
 		std::lock_guard<std::mutex> lock(mutex);
@@ -142,58 +198,7 @@ namespace srv {
 	}
 
 
-	std::atomic<bool> g_flag;
-	std::string tryDownload(const std::string &savepath, const std::string &url) {
-		constexpr char wr = '"', sp = ' ', pt = '.';
-		constexpr auto cd = "cd", and = " && ", kill = "taskkill /IM yt-dlp.exe /F";
-
-		constexpr time_t timeout = 10'000, pause = 1'000;
-		constexpr size_t maxlen  = (size_t) 50 * 1024 * 1024;
-
-		static const std::string cdto = (std::string) cd + sp + (wr + fs::path(pth::DOWNLOAD_SCRIPT).parent_path().string() + wr);
-		static const std::string script = fs::path(pth::DOWNLOAD_SCRIPT).filename().string();
-		static const std::string closestr = (std::string) cdto + and + kill;
-		static const std::vector<std::string> extlist = { "flac", "mp3" };
-		static algs::TaskQueue queue;
-
-
-		for (const auto &ext: extlist) {
-			queue.run();
-			g_flag.store(true);
-			std::string output = (std::string) savepath + pt + ext;
-			std::string exestr = (std::string) cdto + and + (script) + sp + (wr + output + wr) + sp + (ext) + sp + (wr + url + wr);
-			queue.addTask([&]() {                                                                                                          // thread to executing
-				system(exestr.c_str()); 
-				g_flag.store(false); 
-			});
-
-			time_t count = timeout;
-			while (g_flag.load() && count > 0) {                                                                                           // time to execute (controll in main thread)
-				std::this_thread::sleep_for(std::chrono::milliseconds(pause));
-				count -= pause;
-			}
-			if (g_flag.load()) {
-				system(closestr.c_str());                                                                                                  // broke problems
-				continue;
-			}
-
-			std::ifstream file(output, std::ios::binary | std::ios::ate);
-			if (!fs::exists(output) || !file.is_open()) {                                                                                  // origin file is big
-				continue;
-			}
-
-			file.seekg(0, std::ios::end);
-			if (file.tellg() > maxlen) {                                                                                                   // file size more then 50Mb
-				file.close();
-				fs::remove(output);
-				continue;
-			}
-			else {
-				return pt + ext;                                                                                                           // exstension of download audio
-			}
-		}
-		return "";
-	}
+	
 
 	void SendAudioFromURL::execute(const std::vector<std::string> &args) const {
 		constexpr auto sl = "/", filestem = "default", s_ = "<s><i>", _s = "</i></s>", sep = "\n";
