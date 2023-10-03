@@ -57,11 +57,13 @@ namespace srv
 		}
 
 		ZeroMemory(recvbuff, sizeof(recvbuff));
-		queues = ServerQueues::getInstanse(init::QUEUES_COUNT);
+		queues = ServerQueues::getInstance(init::QUEUES_COUNT);
 	}
 
 	void Server::listening() {
 		constexpr auto log = "The connection was closed by the client!";
+
+		std::cout << "Server listening..." << std::endl;
 
 		client_socket = accept(listen_socket, nullptr, nullptr);
 		if (client_socket == INVALID_SOCKET) {

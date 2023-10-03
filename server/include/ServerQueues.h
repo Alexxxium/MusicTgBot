@@ -23,9 +23,9 @@ namespace srv
 		ServerQueues& operator=(const ServerQueues&) = delete;
 
 
-		static ServerQueues* getInstanse(const std::unordered_map<std::string, int> &cmdlet) noexcept;
+		static ServerQueues* getInstance(const std::unordered_map<std::string, int> &cmdlet) noexcept;
 
-		// Assept string-command and assigns a handlers
+		// Accept string-command and assigns a handlers
 		void accept(std::string &&cmd);
 	};
 }

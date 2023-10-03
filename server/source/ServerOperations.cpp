@@ -67,12 +67,13 @@ namespace srv {
 		}
 	}
 
+
+
 	std::string tryDownload(std::string savepath, const std::string &url, const std::function<void(std::string&)> &update = nullptr) {
 		constexpr char wr = '"', sp = ' ', pt = '.', sl = '/';
 		constexpr auto cd = "cd", and = " && ";
 		constexpr int maxbyites = 50 * 1024 * 1024;
 
-		static std::string script = fs::path(pth::DOWNLOAD_SCRIPT).filename().string();
 		static std::vector<std::string> extlist = { "flac", "mp3" };
 
 		for (const auto &ext: extlist) {
@@ -82,7 +83,7 @@ namespace srv {
 				update(track);
 				savepath = fs::path(savepath).parent_path().string() + sl + fs::path(track).stem().string();
 			}
-			std::string syscmd = (script) + sp + (wr + savepath + wr) + sp + (ext) + sp + (wr + url + wr);
+			std::string syscmd = (pth::DOWNLOAD_SCRIPT) + sp + (wr + savepath + wr) + sp + (ext) + sp + (wr + url + wr);
 			startProcess(syscmd, 20'000, 500);
 
 			output = savepath + pt + ext;
@@ -105,21 +106,12 @@ namespace srv {
 
 	void DownloadAudioGroup::execute(const std::vector<std::string> &args) const {
 		constexpr auto 
-			sl = "/", 
-			_i = "</i>", 
-			_s = "</s>", 
-			sep = "\n",
-			s_ = "<s>",
-			urlcmd = "url",
-			dfltname = "default",
-			report = u8"<i><b>Отчет:</b>";
+			sl = "/", _i = "</i>", _s = "</s>", sep = "\n", s_ = "<s>", 
+			urlcmd = "url", dfltname = "default", report = u8"<i><b>Отчет:</b>";
 
 		constexpr int
-			start_id = 1,
-			start_name = 2,
-			start_args = 3,
-			notation_size = 4,
-			max_tracks = 50;
+			start_id = 1, start_name = 2, start_args = 3,
+			notation_size = 4, max_tracks = 50;
 
 		if (args.size() < notation_size) {
 			throw err::INVALID_NOTATION;
@@ -197,8 +189,6 @@ namespace srv {
 		unlock(args[start_id], args[start_name]);
 	}
 
-
-	
 
 	void SendAudioFromURL::execute(const std::vector<std::string> &args) const {
 		constexpr auto sl = "/", filestem = "default", s_ = "<s><i>", _s = "</i></s>", sep = "\n";

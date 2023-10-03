@@ -49,7 +49,7 @@ namespace srv
 		err::CREATE_PROCESS_FAILED  ("Failed to create system process!");
 
 	const std::string
-		pth::USER_DATA_DIR          = u8"D:/Prog/C++ prog/MusicTgBot/test data/",
-		pth::BUFFER_DIR             = u8"D:/Prog/C++ prog/MusicTgBot/buffer data/",
-		pth::DOWNLOAD_SCRIPT        = u8"D:/Prog/C++ prog/MusicTgBot/out/build/x64-Debug/server/script.bat";
+		pth::USER_DATA_DIR          = u8"user data/",
+		pth::BUFFER_DIR             = u8"buffer data/",
+		pth::DOWNLOAD_SCRIPT        = u8"script.bat";
 }

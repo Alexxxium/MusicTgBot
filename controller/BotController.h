@@ -28,10 +28,10 @@ namespace mb
 		BotController& operator=(const BotController) = delete;
 
 		// Return static pointer to instanse. WARNING: If instanse was`t created before then return nullptr
-		static BotController* getInstanse() noexcept;
+		static BotController* getInstance() noexcept;
 
 		// Return instanse of BotController
-		static BotController* getInstanse(const std::string &TOKEN) noexcept;
+		static BotController* getInstance(const std::string &TOKEN) noexcept;
 
 		// Forward command to server and return HTML response to send user
 		std::string forward(const std::string &srvcmd);

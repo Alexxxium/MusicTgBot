@@ -20,11 +20,11 @@ namespace mb
 	{
 	}
 
-	BotController* BotController::getInstanse() noexcept {
+	BotController* BotController::getInstance() noexcept {
 		return singleton;
 	}
 
-	BotController* BotController::getInstanse(const std::string &TOKEN) noexcept {
+	BotController* BotController::getInstance(const std::string &TOKEN) noexcept {
 		if (!singleton) {
 			singleton = new BotController(TOKEN);
 		}

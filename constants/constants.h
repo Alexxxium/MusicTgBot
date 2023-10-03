@@ -3,9 +3,10 @@
 #include <unordered_set>
 
 
+
 namespace mb
 {
-/// COMMANDS ID (CBQ - CallBack Query, не сво):
+/// COMMANDS ID (CBQ - CallBack Query):
 	enum types {
 		NONE,
 		CMD_TYPE_ANY,
@@ -170,6 +171,7 @@ namespace mb
 			HTML_OLD_DATA,
 			HTML_WAIT_SERVER_RESP,
 			HTML_WAIT_SEND_TO_SRV,
+			HTML_BAD_ANSWER,
 			
 			LOCK_FILE,
 			HTML_LOCK_SECTION;

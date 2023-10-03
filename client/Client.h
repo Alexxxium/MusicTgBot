@@ -10,22 +10,6 @@
 
 namespace mb
 {
-
-	class Client_t {
-	private:
-
-
-	public:
-		Client_t();
-		~Client_t() = default;
-		Client_t(Client_t&&) = delete;
-		Client_t(const Client_t&) = delete;
-		Client_t& operator=(Client_t&&) = delete;
-		Client_t& operator=(const Client_t&) = delete;
-	};
-
-
-
 	static const int DEFAULT_LEN = 128;
 	static const std::string DEFAULT_PORT = "666";
 
@@ -48,6 +32,7 @@ namespace mb
 
 		explicit Client(const std::string &port = DEFAULT_PORT);
 
+		// Redirect request to server and return answer
 		std::string redirect(const std::string &srvcmd);
 	};
 }

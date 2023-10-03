@@ -2,6 +2,7 @@
 #include <map>
 
 
+
 namespace algs
 {
 	TaskQueueWrapper::TaskQueueWrapper(const int &len) {

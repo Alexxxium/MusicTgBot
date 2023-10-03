@@ -85,7 +85,7 @@ namespace algs
 
 
 	void TaskQueue::start() {
-		constexpr int milsec = 100;
+		constexpr int ms = 100;
 
 		while (true) {
 			if (quit.load()) {
@@ -106,11 +106,11 @@ namespace algs
 				queue.pop();
 			}
 			else {
-				std::this_thread::sleep_for(std::chrono::milliseconds(milsec));
+				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 			}
 
 			while (pause.load()) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(milsec));
+				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 			}
 		}
 	}

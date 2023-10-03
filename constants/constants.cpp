@@ -39,6 +39,7 @@ namespace mb
 	DataError::DataError(const std::string &err_name): std::exception(err_name.c_str()) {}
 	
 	
+
 	const BotError
 		err::EMBARGO                   ("This code area is banned!"),
 		err::CANT_OPEN_HTML_FILE       ("Can`t open file.html!"),
@@ -71,14 +72,13 @@ namespace mb
 		
 	 
 
-
 	const std::string
 		pth::HTML_WELCOME              = u8"welcome.html",
 		pth::HTML_INFO                 = u8"info.html",
 
-		pth::USER_DATA_DIR             = u8"D:/Prog/C++ prog/MusicTgBot/test data/",
-		pth::BUFFER_DIR                = u8"D:/Prog/C++ prog/MusicTgBot/buffer data/",
-		pth::MESSAGE_DIR               = u8"D:/Prog/C++ prog/MusicTgBot/constants/messages/",
+		pth::USER_DATA_DIR             = u8"user data/",
+		pth::BUFFER_DIR                = u8"buffer data/",
+		pth::MESSAGE_DIR               = u8"messages/",
 
 		pth::HTML_LITTLE_NAME          = u8"LittleName.html",
 		pth::HTML_LARGE_NAME           = u8"LargeName.html",
@@ -98,6 +98,7 @@ namespace mb
 		pth::HTML_OLD_DATA             = u8"OldData.html",
 		pth::HTML_WAIT_SERVER_RESP     = u8"WaitServerResponse.html",
 		pth::HTML_WAIT_SEND_TO_SRV     = u8"WaitSendingToServer.html",
+		pth::HTML_BAD_ANSWER           = u8"BadAnswer.html",
 		
 		pth::LOCK_FILE                 = u8"lock.txt",
 		pth::HTML_LOCK_SECTION         = u8"lockSection.html";
@@ -105,7 +106,6 @@ namespace mb
 
 
 	const std::string init::TOKEN      = "6282754512:AAFaF5Gfi3uTTgNRndN8y3c3xac2y7b-25U";
-
 
 
 	const std::vector<cmd::Command*> init::CMDLET 
@@ -150,7 +150,6 @@ namespace mb
 
 		return keyboard;
 	}
-
 
 	const std::unordered_set<std::string> init::SUPEXT
 	{

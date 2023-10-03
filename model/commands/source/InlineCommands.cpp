@@ -1,12 +1,12 @@
-#include "InlineCommands.h"
 #include "InlKeyboardFactory.h"
+#include "InlineCommands.h"
 #include "BotController.h"
 #include "MacroCommands.h"
-#include "constants.h"
 #include "validators.h"
+#include "constants.h"
 #include "userdata.h"
-
 #include <filesystem>
+
 
 
 static const std::string lockSection = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_LOCK_SECTION);
@@ -91,7 +91,7 @@ namespace mb::cmd::inl
 			return false;
 		}
 
-		auto *ctrl = BotController::getInstanse();
+		auto *ctrl = BotController::getInstance();
 		if (ctrl == nullptr) {
 			throw err::NULL_INSTANSE;
 		}
@@ -183,7 +183,7 @@ namespace mb::cmd::inl
 			return false;
 		}
 
-		auto *ctrl = BotController::getInstanse();
+		auto *ctrl = BotController::getInstance();
 		if (ctrl == nullptr) {
 			throw err::NULL_INSTANSE;
 		}

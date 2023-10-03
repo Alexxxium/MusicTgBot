@@ -21,7 +21,7 @@ namespace srv
 		}
 	}
 
-	ServerQueues* ServerQueues::getInstanse(const std::unordered_map<std::string, int> &cmdlet) noexcept {
+	ServerQueues* ServerQueues::getInstance(const std::unordered_map<std::string, int> &cmdlet) noexcept {
 		if (!singleton) {
 			singleton = new ServerQueues(cmdlet);
 		}

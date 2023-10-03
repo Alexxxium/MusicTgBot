@@ -5,17 +5,15 @@
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
-	std::cout << "Server...\n";
-
 	try {
 		srv::Server server;
 		server.listening();
-		server.close();
 	}
-	catch (...) {
-		return 1;
+	catch (const std::exception &err) {
+		std::cout << "-s error:\t" << err.what() << std::endl;
 	}
-
-	std::cout << "...end\n";
+	catch(...) {
+		std::cout << "-u error:\t" << "Unknown error!" << std::endl;
+	}
+	system("pause");
 }

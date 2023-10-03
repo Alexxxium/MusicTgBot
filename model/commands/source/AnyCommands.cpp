@@ -12,7 +12,6 @@
 
 
 static std::mutex mutex;
-
 static TgBot::Bot asyncBot(mb::init::TOKEN);
 
 // 20 queues to async tasks
@@ -21,6 +20,7 @@ static algs::TaskQueueWrapper asyncWrap(20);
 // id -> atomic flag(wait/not wait response from server), buffer (args to server)
 static std::unordered_map<int64_t, std::pair<std::atomic<bool>, std::list<std::string>>> usersBuffer;
 
+static const std::string badAnswer = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_BAD_ANSWER);
 static const std::string serverBusy = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_WAIT_SERVER_RESP);
 static const std::string waitSendind = mb::core::parseHTML(mb::pth::MESSAGE_DIR + mb::pth::HTML_WAIT_SEND_TO_SRV);
 
@@ -98,6 +98,11 @@ namespace mb::cmd::any
 
 			std::lock_guard<std::mutex> lock(mutex);
 			if (buffer.size() == entry) {
+				if (buffer.empty()) {
+					asyncBot.getApi().sendMessage(id, badAnswer, false, 0, nullptr, mrk::HTML);
+					flag.store(false);
+					return;
+				}
 				flag.store(true);
 
 				if (buffer.size() > maxlen) {
@@ -110,7 +115,7 @@ namespace mb::cmd::any
 				}
 				asyncBot.getApi().sendMessage(id, text, false, 0, nullptr, mrk::HTML);
 
-				auto ctrl = BotController::getInstanse();
+				auto ctrl = BotController::getInstance();
 
 				if (ctrl != nullptr) {
 					std::vector<std::string> args(buffer.begin(), buffer.end());
@@ -201,7 +206,7 @@ namespace mb::cmd::any
 			return false;
 		}
 		
-		auto ctrl = BotController::getInstanse();
+		auto ctrl = BotController::getInstance();
 		std::string srvcmd = core::makeServerCmd(core::makeServerCmd(cmd, { std::to_string(id) }), args);
 
 		if (ctrl == nullptr) {

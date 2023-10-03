@@ -186,7 +186,7 @@ namespace mb::core
 		}
 		std::fstream file(path);
 		if (!file.is_open()) {
-			throw err::CANT_OPEN_LOCK_FILE;
+			return true;
 		}
 
 		std::string buff;
