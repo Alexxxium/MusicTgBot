@@ -107,7 +107,7 @@ namespace srv {
 	void DownloadAudioGroup::execute(const std::vector<std::string> &args) const {
 		constexpr auto 
 			sl = "/", _i = "</i>", _s = "</s>", sep = "\n", s_ = "<s>", 
-			urlcmd = "url", dfltname = "default", report = u8"<i><b>�����:</b>";
+			urlcmd = "url", dfltname = "default", report = u8"<i><b>Отчет:</b>";
 
 		constexpr int
 			start_id = 1, start_name = 2, start_args = 3,
@@ -193,7 +193,7 @@ namespace srv {
 
 	void SendAudioFromURL::execute(const std::vector<std::string> &args) const {
 		constexpr auto sl = "/", filestem = "default", s_ = "<s><i>", _s = "</i></s>", sep = "\n";
-		std::string report = u8"<i><b>Îò÷åò:</b></i>";
+		std::string report = u8"<i><b>Отчет:</b></i>";
 		constexpr int
 			start_id = 1,
 			start_args = 2,
