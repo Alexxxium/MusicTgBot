@@ -12,9 +12,9 @@
 <nav>
   <h2>Навигационное меню</h2>
   <ul>
-    <li><a href="#1"><i>Собрать/установить</i></a></li>
-    <li><a href="#2"><i>Реализация</i></a></li>
-    <li><a href="#3"><i>Использование</i></a></li>
+    <li><a href="https://github.com/Alexxxium/MusicTgBot#%D1%81%D0%B1%D0%BE%D1%80%D0%BA%D0%B0"><i>Собрать/установить</i></a></li>
+    <li><a href="https://github.com/Alexxxium/MusicTgBot#%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F"><i>Реализация</i></a></li>
+    <li><a href="https://github.com/Alexxxium/MusicTgBot#%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5"><i>Использование</i></a></li>
   </ul>
 </nav>
 
@@ -132,7 +132,7 @@
 <h2 id="3">Использование</h2>
 <figure>
   <contitle><h3>Создать/переименовать</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/RenamePList.png", alt="Img go wor a walk">  
+  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/RenamePList.png?raw=true", alt="Img go wor a walk">  
 </figure>
 <h2></h2>
 
@@ -141,7 +141,7 @@
 
 <figure>
   <contitle><h3>Меню и выгрузка</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/PLists.png", alt="Img go for a walk">
+  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/PLists.png?raw=true", alt="Img go for a walk">
 </figure>
 <h2></h2>
 
@@ -150,7 +150,7 @@
 
 <figure>
   <contitle><h3>Удаление и устаревшие данные</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Remove.png", alt="Img go for a walk">
+  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Remove.png?raw=true", alt="Img go for a walk">
 </figure>
 <h2></h2>
 
@@ -159,5 +159,5 @@
 
 <figure>
   <contitle><h3>Загрузка треков</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Uploading.png", alt="Img go for a walk">
+  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Uploading.png?raw=true", alt="Img go for a walk">
 </figure>
