@@ -132,7 +132,7 @@
 <h2 id="3">Использование</h2>
 <figure>
   <contitle><h3>Создать/переименовать</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/RenamePList.png?raw=true", alt="Img go wor a walk">  
+  <img src="https://raw.githubusercontent.com/Alexxxium/DocumentationSources/main/MusicTgBot/RenamePList.png?token=GHSAT0AAAAAACHC7GRPPTCPIFHZ6NLBCY2CZI64QJA", alt="Img go wor a walk">  
 </figure>
 <h2></h2>
 
@@ -141,7 +141,7 @@
 
 <figure>
   <contitle><h3>Меню и выгрузка</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/PLists.png?raw=true", alt="Img go for a walk">
+  <img src="https://raw.githubusercontent.com/Alexxxium/DocumentationSources/main/MusicTgBot/PLists.png?token=GHSAT0AAAAAACHC7GROBHWP6PWIF2HKEM5CZI64SCQ", alt="Img go for a walk">
 </figure>
 <h2></h2>
 
@@ -150,7 +150,7 @@
 
 <figure>
   <contitle><h3>Удаление и устаревшие данные</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Remove.png?raw=true", alt="Img go for a walk">
+  <img src="https://raw.githubusercontent.com/Alexxxium/DocumentationSources/main/MusicTgBot/Remove.png?token=GHSAT0AAAAAACHC7GROC6HNPLPJU7QDWR72ZI64RNQ", alt="Img go for a walk">
 </figure>
 <h2></h2>
 
@@ -159,5 +159,5 @@
 
 <figure>
   <contitle><h3>Загрузка треков</h3></contitle>
-  <img src="https://github.com/Alexxxium/DocumentationSources/blob/main/MusicTgBot/Uploading.png?raw=true", alt="Img go for a walk">
+  <img src="https://raw.githubusercontent.com/Alexxxium/DocumentationSources/main/MusicTgBot/Uploading.png?token=GHSAT0AAAAAACHC7GROUKOCQVTQKV2GE57YZI64SSQ", alt="Img go for a walk">
 </figure>
