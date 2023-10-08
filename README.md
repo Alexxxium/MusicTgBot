@@ -60,7 +60,7 @@
 
 <h3>Установка</h3>
 <p>
-  Для людей: <i><a href="">висячая ссылка</a></i> - в папке с исполняемыми файлами создайте <b><i>token.txt</i></b> и запишите туда свой токен без пробелов.
+  Для людей: <i><a href="https://drive.google.com/drive/folders/1mJVy5q6JVyAkWtUrDoKkKKP3WvQHsss6?usp=sharing">MusicTgBot</a></i> - в папке с исполняемыми файлами создайте <b><i>token.txt</i></b> и запишите туда свой токен без пробелов.
 </p>
 
 <br>
